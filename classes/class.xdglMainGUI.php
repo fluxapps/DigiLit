@@ -58,7 +58,7 @@ class xdglMainGUI
         $this->tabs->addTab(
             self::TAB_REQUESTS,
             $this->pl->txt('tab_' . self::TAB_REQUESTS),
-            $this->ctrl->getLinkTargetByClass(xdglRequestGUI::class)
+            $this->ctrl->getLinkTargetByClass(xdglRequestGUI::class, 'applyFilter')
         );
         if (ilObjDigiLitAccess::isAdmin()) {
             $this->tabs->addTab(

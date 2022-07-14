@@ -89,11 +89,6 @@ class xdglRequestGUI
         $this->ctrl = $ilCtrl;
         $this->toolbar = $ilToolbar;
         $this->ilObjDigiLitFacadeFactory = new ilObjDigiLitFacadeFactory();
-
-        if ($_GET['rl'] == 'true') {
-            $this->pl->updateLanguageFiles();
-        }
-
         $this->xdglRequest = xdglRequest::find($_GET[self::XDGL_ID]);
         $this->ctrl->saveParameter($this, self::XDGL_ID);
         ilObjDigiLitGUI::initHeader($this->pl->txt('obj_xdgl_admin_title'));
@@ -105,7 +100,7 @@ class xdglRequestGUI
     public function executeCommand()
     {
         ilObjDigiLitAccess::isManager(true);
-        $cmd = $this->ctrl->getCmd(self::CMD_INDEX);
+        $cmd = $this->ctrl->getCmd(self::CMD_RESET_FILTER);
         switch ($cmd) {
             case self::CMD_INDEX:
             case self::CMD_CANCEL:
@@ -143,6 +138,7 @@ class xdglRequestGUI
     {
         ilObjDigiLitAccess::isManager(true);
         $xdglRequestTableGUI = new xdglRequestTableGUI($this, $this->ctrl->getCmd());
+        $xdglRequestTableGUI->parseData();
         $this->tpl->setContent($xdglRequestTableGUI->getHTML());
     }
 
@@ -188,7 +184,7 @@ class xdglRequestGUI
         if ($xdglRequestFormGUI->saveObject(null)) {
             ilUtil::sendSuccess($this->pl->txt('msg_success_edit'), true);
             $this->ctrl->setParameter($this, self::XDGL_ID, null);
-            $this->ctrl->redirect($this);
+            $this->ctrl->redirect($this, self::CMD_INDEX);
         } else {
             $this->tpl->setContent($xdglRequestFormGUI->getHTML());
         }
@@ -202,7 +198,7 @@ class xdglRequestGUI
         if ($xdglRequestFormGUI->saveObject(null)) {
             ilUtil::sendSuccess($this->pl->txt('msg_success_add'), true);
             $this->ctrl->setParameter($this, self::XDGL_ID, null);
-            $this->ctrl->redirect($this);
+            $this->ctrl->redirect($this, self::CMD_INDEX);
         } else {
             $this->tpl->setContent($xdglRequestFormGUI->getHTML());
         }
@@ -227,7 +223,7 @@ class xdglRequestGUI
             $this->xdglRequest->update();
             xdglNotification::sendRejected($this->xdglRequest);
             $this->ctrl->setParameter($this, self::XDGL_ID, null);
-            $this->ctrl->redirect($this);
+            $this->ctrl->redirect($this, self::CMD_INDEX);
         } else {
             $form->setValuesByPost();
             $this->tpl->setContent($form->getHTML());
@@ -242,7 +238,7 @@ class xdglRequestGUI
         $this->xdglRequest->setLibrarianId($ilUser->getId());
         $this->xdglRequest->update();
         $this->ctrl->setParameter($this, self::XDGL_ID, null);
-        $this->ctrl->redirect($this);
+        $this->ctrl->redirect($this, self::CMD_INDEX);
     }
 
     protected function selectFile()
@@ -266,7 +262,7 @@ class xdglRequestGUI
         $upload_form->uploadFile();
 
         $this->ctrl->setParameter($this, self::XDGL_ID, null);
-        $this->ctrl->redirect($this);
+        $this->ctrl->redirect($this, self::CMD_INDEX);
     }
 
     protected function confirmDeleteFile()
@@ -295,7 +291,7 @@ class xdglRequestGUI
         } catch (Exception $e) {
             ilUtil::sendFailure($e->getMessage(), true);
         }
-        $this->ctrl->redirect($this);
+        $this->ctrl->redirect($this, self::CMD_INDEX);
     }
 
     protected function confirmDeleteRequest()
@@ -332,7 +328,7 @@ class xdglRequestGUI
         } catch (Exception $e) {
             ilUtil::sendFailure($e->getMessage(), true);
         }
-        $this->ctrl->redirect($this);
+        $this->ctrl->redirect($this, self::CMD_INDEX);
     }
 
     protected function downloadFile()

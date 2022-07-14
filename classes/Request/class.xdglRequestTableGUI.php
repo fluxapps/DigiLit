@@ -50,7 +50,6 @@ class xdglRequestTableGUI extends ilTable2GUI
         $this->setEnableNumInfo(true);
         $this->setExternalSorting(true);
         $this->setExternalSegmentation(true);
-        $this->parseData();
     }
 
     /**
@@ -247,7 +246,7 @@ class xdglRequestTableGUI extends ilTable2GUI
         }
     }
 
-    protected function parseData()
+    public function parseData()
     {
         global $ilUser;
         $usr_id = $ilUser->getId();
