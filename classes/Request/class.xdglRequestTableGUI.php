@@ -46,7 +46,8 @@ class xdglRequestTableGUI extends ilTable2GUI
         $this->setFormAction($this->ctrl->getFormAction($a_parent_obj));
         $this->initColums();
         $this->initFilters();
-        $this->setDefaultOrderField('title');
+        $this->setDefaultOrderField('create_date');
+        $this->setDefaultOrderDirection('desc');
         $this->setEnableNumInfo(true);
         $this->setExternalSorting(true);
         $this->setExternalSegmentation(true);
