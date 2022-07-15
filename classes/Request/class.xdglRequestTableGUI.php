@@ -13,7 +13,7 @@
 class xdglRequestTableGUI extends ilTable2GUI
 {
 
-    const TBL_XDGL_REQUEST_OVERVIEWS = 'tbl_xdgl_request_overviews_v2';
+    const TBL_XDGL_REQUEST_OVERVIEWS = 'tbl_xdgl_request_overviews_v3';
     /**
      * @var ilDigiLitPlugin
      */
