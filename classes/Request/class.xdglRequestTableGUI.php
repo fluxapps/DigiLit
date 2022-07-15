@@ -61,8 +61,8 @@ class xdglRequestTableGUI extends ilTable2GUI
         $this->tpl->setVariable('VAL_TITLE', $a_set['title']);
         $this->tpl->setVariable('VAL_BOOK', $a_set['book']);
         $this->tpl->setVariable('VAL_PUBLISHING_YEAR', $a_set['publishing_year']);
-        $this->tpl->setVariable('VAL_CREATE_DATE', $a_set['create_date']);
-        $this->tpl->setVariable('VAL_LAST_UPDATE', $a_set['last_change']);
+        $this->tpl->setVariable('VAL_CREATE_DATE', $a_set['create_date_unformatted']);
+        $this->tpl->setVariable('VAL_LAST_UPDATE', $a_set['last_change_unformatted']);
         $this->tpl->setVariable('VAL_REQUESTER_EMAIL', $a_set['usr_data_email']);
         $this->tpl->setVariable('VAL_STATUS', $this->pl->txt('request_status_' . $a_set['status']));
         $this->tpl->setVariable('VAL_LIBRARY', $a_set['xdgl_library_title']);
