@@ -337,15 +337,14 @@ class xdglNotification extends ilMailNotification
     /**
      * @return string
      */
-    public function replaceBody()
+    protected function generateBody() : string
     {
         $placeholders = self::getPlaceHoldersForType($this->getType());
         $body = xdglConfig::getConfigValue($this->getType());
         foreach ($placeholders as $k) {
             $body = str_replace('[' . $k . ']', $this->getReplace($k), $body);
         }
-        $this->setBody($body);
-        $this->getMail()->appendInstallationSignature(true);
+        return $body;
     }
 
     /**
@@ -355,19 +354,26 @@ class xdglNotification extends ilMailNotification
      */
     public function send()
     {
-        global $ilUser;
+        global $DIC;
         /**
          * @var ilObjUser $ilUser
          */
-        $this->setSender($ilUser->getId());
+        $f = new ilMailMimeSenderFactory(
+            $DIC->settings()
+        );
         $this->initUser();
         $this->initLanguage($this->ilObjUser->getId());
-        $this->initMail();
-        $a_subject = $this->getXdglRequest()->getExtId() . ': ' . ilDigiLitPlugin::getInstance()->txt('notification_subject_' . $this->getType());
-        $this->setSubject($a_subject);
-        $this->replaceBody();
-
-        $this->sendMail(array($this->getAdress()), array('normal'), false);
+        
+        $mail = new ilMimeMail();
+        $mail->From($f->user($DIC->user()->getId()));
+        $subject = $this->getXdglRequest()->getExtId() . ': ' . ilDigiLitPlugin::getInstance()->txt(
+                'notification_subject_' . $this->getType()
+            );
+        $mail->Subject($subject);
+        $mail->Body($this->generateBody());
+        $mail->To($this->getAdress());
+        
+        return $mail->Send();
     }
 
     /**

@@ -37,6 +37,18 @@ class xdglRequestFormGUI extends ilPropertyFormGUI
     const F_NOTICE = 'notice';
     const F_INTERNAL_NOTICE = 'internal_notice';
     /**
+     * @var bool
+     */
+    private $is_new;
+    /**
+     * @var bool
+     */
+    private $view;
+    /**
+     * @var bool
+     */
+    private $infopage;
+    /**
      * @var xdglRequest
      */
     protected $request;
@@ -74,9 +86,6 @@ class xdglRequestFormGUI extends ilPropertyFormGUI
         $this->parent_gui = $parent_gui;
         $this->ctrl = $ilCtrl;
         $this->pl = ilDigiLitPlugin::getInstance();
-        if ($_GET['rl'] == 'true') {
-            $this->pl->updateLanguageFiles();
-        }
         $this->ctrl->saveParameter($parent_gui, xdglRequestGUI::XDGL_ID);
         $this->ctrl->saveParameter($parent_gui, 'new_type');
         $this->lng = $lng;
