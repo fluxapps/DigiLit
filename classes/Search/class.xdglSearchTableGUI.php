@@ -11,23 +11,13 @@ class xdglSearchTableGUI extends ilTable2GUI
 {
     use DICTrait;
 
-    const TBL_ID = 'xdgl_search';
+    public const TBL_ID = 'xdgl_search';
     /**
      * @var array
      */
     protected $filter = [];
-    /**
-     * @var xdglSearchGUI
-     */
-    protected $parent_obj;
-    /**
-     * @var ilObjDigiLitAccess
-     */
-    protected $access;
-    /**
-     * @var ilDigiLitPlugin
-     */
-    protected $pl;
+    protected \ilObjDigiLitAccess $access;
+    protected \ilDigiLitPlugin $pl;
     protected $tpl;
 
     /**
@@ -38,9 +28,8 @@ class xdglSearchTableGUI extends ilTable2GUI
      * @param string        $search_title
      * @param string        $search_author
      */
-    function __construct($a_parent_obj, $a_parent_cmd, $a_template_context = "", $search_title, $search_author)
+    public function __construct(?object $a_parent_obj, string $a_parent_cmd, string $a_template_context = "", $search_title, $search_author)
     {
-
         $this->parent_obj = $a_parent_obj;
         $this->access = new ilObjDigiLitAccess();
         $this->pl = ilDigiLitPlugin::getInstance();
@@ -49,24 +38,21 @@ class xdglSearchTableGUI extends ilTable2GUI
         $this->setFormName(self::TBL_ID);
         $this->tpl = self::dic()->ui()->mainTemplate();
         self::dic()->ctrl()->saveParameter($a_parent_obj, $this->getNavParameter());
-
         parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
         $this->parent_obj = $a_parent_obj;
-        $this->setRowTemplate("tpl.search_row.html",
-            "Customizing/global/plugins/Services/Repository/RepositoryObject/DigiLit");
-
+        $this->setRowTemplate(
+            "tpl.search_row.html",
+            "Customizing/global/plugins/Services/Repository/RepositoryObject/DigiLit"
+        );
         //TODO: based on previous cmd change formactionbyclass
         //$this->setFormAction(self::dic()->ctrl()->getFormActionByClass(ilObjDigiLitGUI::class));
         $this->setFormAction(self::dic()->ctrl()->getFormActionByClass(xdglSearchGUI::class));
-
         $this->setExternalSorting(true);
         $this->addCommandButton(xdglSearchGUI::CMD_ADD_LITERATURE, $this->pl->txt('add_literature'));
-
         $this->setDefaultOrderField("title");
         $this->setDefaultOrderDirection("asc");
         $this->setExternalSegmentation(true);
         $this->setEnableHeader(true);
-
         $this->initColums();
         $this->parseData($search_title, $search_author);
     }
@@ -74,13 +60,13 @@ class xdglSearchTableGUI extends ilTable2GUI
     /**
      * @param array $a_set
      */
-    public function fillRow($a_set)
+    protected function fillRow(array $a_set): void
     {
         $rdg_input = new ilRadioGroupInputGUI('', 'chosen_literature');
         $rd_option = new ilRadioOption('', $a_set['id']);
         $rdg_input->addOption($rd_option);
         $this->tpl->setVariable('RADIO_BTN', $rdg_input->render());
-        foreach ($this->getSelectableColumns() as $k => $v) {
+        foreach (array_keys($this->getSelectableColumns()) as $k) {
             if ($this->isColumnSelected($k)) {
                 if ($a_set[$k]) {
                     $this->tpl->setCurrentBlock('td');
@@ -130,40 +116,11 @@ class xdglSearchTableGUI extends ilTable2GUI
         $this->setData($data);
     }
 
-    public function getSelectableColumns()
+    /**
+     * @return array{status: array{txt: string, default: true}, author: array{txt: string, default: true}, title: array{txt: string, default: true}, book: array{txt: string, default: true}, publisher: array{txt: string, default: true}, location: array{txt: string, default: true}, publishing_year: array{txt: string, default: true}, pages: array{txt: string, default: true}}
+     */
+    public function getSelectableColumns(): array
     {
-        $cols["status"] = array(
-            "txt" => $this->pl->txt("request_status"),
-            "default" => true
-        );
-        $cols["author"] = array(
-            "txt" => $this->pl->txt("author"),
-            "default" => true
-        );
-        $cols["title"] = array(
-            "txt" => $this->pl->txt("title"),
-            "default" => true
-        );
-        $cols["book"] = array(
-            "txt" => $this->pl->txt("request_book"),
-            "default" => true
-        );
-        $cols["publisher"] = array(
-            "txt" => $this->pl->txt("request_publisher"),
-            "default" => true
-        );
-        $cols["location"] = array(
-            "txt" => $this->pl->txt("request_location"),
-            "default" => true
-        );
-        $cols["publishing_year"] = array(
-            "txt" => $this->pl->txt("request_publishing_year"),
-            "default" => true
-        );
-        $cols["pages"] = array(
-            "txt" => $this->pl->txt("request_pages"),
-            "default" => true
-        );
-        return $cols;
+        return ["status" => ["txt" => $this->pl->txt("request_status"), "default" => true], "author" => ["txt" => $this->pl->txt("author"), "default" => true], "title" => ["txt" => $this->pl->txt("title"), "default" => true], "book" => ["txt" => $this->pl->txt("request_book"), "default" => true], "publisher" => ["txt" => $this->pl->txt("request_publisher"), "default" => true], "location" => ["txt" => $this->pl->txt("request_location"), "default" => true], "publishing_year" => ["txt" => $this->pl->txt("request_publishing_year"), "default" => true], "pages" => ["txt" => $this->pl->txt("request_pages"), "default" => true]];
     }
 }

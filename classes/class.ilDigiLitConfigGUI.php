@@ -11,11 +11,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
  */
 class ilDigiLitConfigGUI extends ilPluginConfigGUI
 {
-
     /**
      * TODO: Refactor
      */
-    public function executeCommand()
+    public function executeCommand(): void
     {
         global $ilCtrl, $ilTabs, $lng, $tpl;
         /**
@@ -35,11 +34,15 @@ class ilDigiLitConfigGUI extends ilPluginConfigGUI
         $ilTabs->clearTargets();
 
         if ($_GET["plugin_id"]) {
-            $ilTabs->setBackTarget($lng->txt("cmps_plugin"),
-                $ilCtrl->getLinkTargetByClass(ilObjComponentSettingsGUI::class, "showPlugin"));
+            $ilTabs->setBackTarget(
+                $lng->txt("cmps_plugin"),
+                $ilCtrl->getLinkTargetByClass(ilObjComponentSettingsGUI::class, "showPlugin")
+            );
         } else {
-            $ilTabs->setBackTarget($lng->txt("cmps_plugins"),
-                $ilCtrl->getLinkTargetByClass(ilObjComponentSettingsGUI::class, "listPlugins"));
+            $ilTabs->setBackTarget(
+                $lng->txt("cmps_plugins"),
+                $ilCtrl->getLinkTargetByClass(ilObjComponentSettingsGUI::class, "listPlugins")
+            );
         }
 
         $a_gui_object = new xdglMainGUI();
@@ -47,7 +50,7 @@ class ilDigiLitConfigGUI extends ilPluginConfigGUI
         //		$ilCtrl->forwardCommand($a_gui_object);
     }
 
-    public function performCommand($cmd)
+    public function performCommand(string $cmd): void
     {
     }
 }

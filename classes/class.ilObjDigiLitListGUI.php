@@ -1,24 +1,24 @@
 <?php
 /*
-	+-----------------------------------------------------------------------------+
-	| ILIAS open source                                                           |
-	+-----------------------------------------------------------------------------+
-	| Copyright (c) 1998-2009 ILIAS open source, University of Cologne            |
-	|                                                                             |
-	| This program is free software; you can redistribute it and/or               |
-	| modify it under the terms of the GNU General Public License                 |
-	| as published by the Free Software Foundation; either version 2              |
-	| of the License, or (at your option) any later version.                      |
-	|                                                                             |
-	| This program is distributed in the hope that it will be useful,             |
-	| but WITHOUT ANY WARRANTY; without even the implied warranty of              |
-	| MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               |
-	| GNU General Public License for more details.                                |
-	|                                                                             |
-	| You should have received a copy of the GNU General Public License           |
-	| along with this program; if not, write to the Free Software                 |
-	| Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. |
-	+-----------------------------------------------------------------------------+
+    +-----------------------------------------------------------------------------+
+    | ILIAS open source                                                           |
+    +-----------------------------------------------------------------------------+
+    | Copyright (c) 1998-2009 ILIAS open source, University of Cologne            |
+    |                                                                             |
+    | This program is free software; you can redistribute it and/or               |
+    | modify it under the terms of the GNU General Public License                 |
+    | as published by the Free Software Foundation; either version 2              |
+    | of the License, or (at your option) any later version.                      |
+    |                                                                             |
+    | This program is distributed in the hope that it will be useful,             |
+    | but WITHOUT ANY WARRANTY; without even the implied warranty of              |
+    | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               |
+    | GNU General Public License for more details.                                |
+    |                                                                             |
+    | You should have received a copy of the GNU General Public License           |
+    | along with this program; if not, write to the Free Software                 |
+    | Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. |
+    +-----------------------------------------------------------------------------+
 */
 
 /**
@@ -37,17 +37,7 @@
  */
 class ilObjDigiLitListGUI extends ilObjectPluginListGUI
 {
-
-    /**
-     * @var ilDigiLitPlugin
-     */
-    public $plugin;
-    /**
-     * @var array
-     */
-    protected $commands;
-
-    public function initType()
+    public function initType()/*: void*/
     {
         $this->setType(ilDigiLitPlugin::PLUGIN_ID);
     }
@@ -55,7 +45,7 @@ class ilObjDigiLitListGUI extends ilObjectPluginListGUI
     /**
      * @return string
      */
-    public function getGuiClass()
+    public function getGuiClass(): string
     {
         return ilObjDigiLitGUI::class;
     }
@@ -63,7 +53,7 @@ class ilObjDigiLitListGUI extends ilObjectPluginListGUI
     /**
      * @return array
      */
-    public function getCommands()
+    public function getCommands(): array
     {
         $this->commands = $this->initCommands();
 
@@ -73,7 +63,7 @@ class ilObjDigiLitListGUI extends ilObjectPluginListGUI
     /**
      * @return array
      */
-    public function initCommands()
+    public function initCommands(): array
     {
 
         // Always set
@@ -105,19 +95,15 @@ class ilObjDigiLitListGUI extends ilObjectPluginListGUI
         return $commands;
     }
 
-    /**
-     * @param string $title
-     *
-     * @return bool|void
-     */
-    public function setTitle($title)
+
+    public function setTitle(string $title): void
     {
         $ilObjDigiLitFacadeFactory = new ilObjDigiLitFacadeFactory();
         $request_usage = $ilObjDigiLitFacadeFactory->requestUsageFactory()->getInstanceByObjectId($this->obj_id);
         $request = xdglRequest::find($request_usage->getRequestId());
         $this->title = $request->getTitle() . ' / ' . $request->getAuthor();
         parent::setTitle($this->title);
-        $this->default_command = false;
+        $this->default_command = [];
     }
 
     /**
@@ -128,7 +114,7 @@ class ilObjDigiLitListGUI extends ilObjectPluginListGUI
      *                        "property" (string) => property name
      *                        "value" (string) => property value
      */
-    public function getProperties()
+    public function getProperties(): array
     {
         global $lng;
 
@@ -258,7 +244,7 @@ class ilObjDigiLitListGUI extends ilObjectPluginListGUI
      *
      * @overwritten
      */
-    public function insertTitle()
+    public function insertTitle(): void
     {
         /**
          * @var ilCtrl $ilCtrl
@@ -349,13 +335,22 @@ class ilObjDigiLitListGUI extends ilObjectPluginListGUI
             }
         }
 
-        $result = self::fmtFloat($scaled_size, ($scaled_unit
-                == 'lang_size_bytes') ? 0 : 1, $a_lng->txt('lang_sep_decimal'), $a_lng->txt('lang_sep_thousand'),
-                true) . ' '
+        $result = self::fmtFloat(
+            $scaled_size,
+            ($scaled_unit
+                == 'lang_size_bytes') ? 0 : 1,
+            $a_lng->txt('lang_sep_decimal'),
+            $a_lng->txt('lang_sep_thousand'),
+            true
+        ) . ' '
             . $a_lng->txt($scaled_unit);
         if ($a_mode == 'long' && $size > $mag) {
-            $result .= ' (' . self::fmtFloat($size, 0, $a_lng->txt('lang_sep_decimal'),
-                    $a_lng->txt('lang_sep_thousand')) . ' '
+            $result .= ' (' . self::fmtFloat(
+                $size,
+                0,
+                $a_lng->txt('lang_sep_decimal'),
+                $a_lng->txt('lang_sep_thousand')
+            ) . ' '
                 . $a_lng->txt('lang_size_bytes') . ')';
         }
 

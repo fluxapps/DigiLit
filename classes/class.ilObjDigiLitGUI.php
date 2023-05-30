@@ -1,24 +1,24 @@
 <?php
 /*
-	+-----------------------------------------------------------------------------+
-	| ILIAS open source                                                           |
-	+-----------------------------------------------------------------------------+
-	| Copyright (c) 1998-2009 ILIAS open source, University of Cologne            |
-	|                                                                             |
-	| This program is free software; you can redistribute it and/or               |
-	| modify it under the terms of the GNU General Public License                 |
-	| as published by the Free Software Foundation; either version 2              |
-	| of the License, or (at your option) any later version.                      |
-	|                                                                             |
-	| This program is distributed in the hope that it will be useful,             |
-	| but WITHOUT ANY WARRANTY; without even the implied warranty of              |
-	| MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               |
-	| GNU General Public License for more details.                                |
-	|                                                                             |
-	| You should have received a copy of the GNU General Public License           |
-	| along with this program; if not, write to the Free Software                 |
-	| Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. |
-	+-----------------------------------------------------------------------------+
+    +-----------------------------------------------------------------------------+
+    | ILIAS open source                                                           |
+    +-----------------------------------------------------------------------------+
+    | Copyright (c) 1998-2009 ILIAS open source, University of Cologne            |
+    |                                                                             |
+    | This program is free software; you can redistribute it and/or               |
+    | modify it under the terms of the GNU General Public License                 |
+    | as published by the Free Software Foundation; either version 2              |
+    | of the License, or (at your option) any later version.                      |
+    |                                                                             |
+    | This program is distributed in the hope that it will be useful,             |
+    | but WITHOUT ANY WARRANTY; without even the implied warranty of              |
+    | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               |
+    | GNU General Public License for more details.                                |
+    |                                                                             |
+    | You should have received a copy of the GNU General Public License           |
+    | along with this program; if not, write to the Free Software                 |
+    | Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. |
+    +-----------------------------------------------------------------------------+
 */
 
 use srag\DIC\DigiLit\DICTrait;
@@ -44,23 +44,20 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
 {
     use DICTrait;
 
-    const CMD_CONFIRM_DELETE_OBJECT = 'confirmDeleteObject';
-    const CMD_REDIRECT_PARENT_GUI = 'redirectParentGui';
-    const CMD_SHOW_CONTENT = 'showContent';
-    const CMD_SEND_FILE = 'sendFile';
-    const CMD_DELETE_DIGI_LIT = 'confirmedDelete';
-    const CMD_CREATE = 'create';
-    const CMD_SAVE = 'save';
-    const CMD_EDIT = 'edit';
-    const CMD_UPDATE = 'update';
-    const CMD_CANCEL = 'cancel';
-    const CMD_INFO_SCREEN = 'infoScreen';
-    const TAB_PERMISSIONS = 'permissions';
-    const TAB_INFO = 'info';
-    /**
-     * @var ilObjDigiLit
-     */
-    public $object;
+    public const CMD_CONFIRM_DELETE_OBJECT = 'confirmDeleteObject';
+    public const CMD_REDIRECT_PARENT_GUI = 'redirectParentGui';
+    public const CMD_SHOW_CONTENT = 'showContent';
+    public const CMD_SEND_FILE = 'sendFile';
+    public const CMD_DELETE_DIGI_LIT = 'confirmedDelete';
+    public const CMD_CREATE = 'create';
+    public const CMD_SAVE = 'save';
+    public const CMD_EDIT = 'edit';
+    public const CMD_UPDATE = 'update';
+    public const CMD_CANCEL = 'cancel';
+    public const CMD_INFO_SCREEN = 'infoScreen';
+    public const TAB_PERMISSIONS = 'permissions';
+    public const TAB_INFO = 'info';
+
     /**
      * @var xdglRequest
      */
@@ -69,10 +66,7 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
      * @var ilDigiLitPlugin
      */
     protected $pl;
-    /**
-     * @var ilCtrl
-     */
-    protected $ctrl;
+
     /**
      * @var \ILIAS\DI\HTTPServices
      */
@@ -85,18 +79,7 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
      * @var ilNavigationHistory
      */
     protected $history;
-    /**
-     * @var ilTabsGUI
-     */
-    public $tabs_gui;
-    /**
-     * @var ilAccessHandler
-     */
-    protected $access;
-    /**
-     * @var ilLocator
-     */
-    protected $locator;
+
     /**
      * @var ilObjDigiLitFacadeFactory
      */
@@ -113,8 +96,8 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
      * @var \ILIAS\GlobalScreen\Scope\Layout\MetaContent\MetaContent
      */
     protected $meta;
-    
-    protected function afterConstructor()
+
+    protected function afterConstructor(): void
     {
         global $tpl, $ilCtrl, $ilAccess, $ilNavigationHistory, $ilTabs, $ilLocator, $DIC;
         /**
@@ -137,26 +120,31 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
         $this->ilObjDigiLitFacadeFactory = new ilObjDigiLitFacadeFactory();
     }
 
+    public function performCommand(string $cmd): void
+    {
+        // TODO: Implement performCommand() method.
+    }
+
     /**
      * @param ilObject $newObj
      * @param bool     $only_parent_func
      */
-    public function afterSave(ilObject $newObj)
+    protected function afterSave(ilObject $new_object): void
     {
         global $DIC;
         $args = func_get_args();
         $xdglRequestUsage = new xdglRequestUsage();
-        $xdglRequestUsage->setCrsRefId($DIC->repositoryTree()->getParentId($newObj->ref_id));
+        $xdglRequestUsage->setCrsRefId($DIC->repositoryTree()->getParentId($new_object->getRefId()));
         $xdglRequestUsage->setRequestId($args[1][0]);
-        $xdglRequestUsage->setObjId($newObj->getId());
+        $xdglRequestUsage->setObjId($new_object->getId());
         $xdglRequestUsage->create();
-        parent::afterSave($newObj);
+        parent::afterSave($new_object);
     }
 
     /**
      * @return string
      */
-    final public function getType()
+    final public function getType(): string
     {
         return ilDigiLitPlugin::PLUGIN_ID;
     }
@@ -175,7 +163,7 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
         return false;
     }
 
-    public function executeCommand()
+    public function executeCommand(): void
     {
         $this->locator->addRepositoryItems();
         $this->tpl->setLocator();
@@ -191,8 +179,12 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
         if ($this->access->checkAccess('read', '', $_GET['ref_id']) && $this->isDigiLitObject($_GET['ref_id'])
             && ilObjDigiLitAccess::hasAccessToDownload($_GET['ref_id'])
             && $this->xdglRequest->getStatus() == xdglRequest::STATUS_RELEASED) {
-            $this->history->addItem($_GET['ref_id'], $this->ctrl->getLinkTarget($this, self::CMD_SEND_FILE),
-                $this->getType(), '');
+            $this->history->addItem(
+                $_GET['ref_id'],
+                $this->ctrl->getLinkTarget($this, self::CMD_SEND_FILE),
+                $this->getType(),
+                ''
+            );
         }
         $cmd = $this->ctrl->getCmd();
         $next_class = $this->ctrl->getNextClass($this);
@@ -205,7 +197,6 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
         if ($this->xdglRequest->getId()) {
             self::initHeader($this->xdglRequest->getTitle());
         } else {
-
             self::initHeader($this->pl->txt('obj_xdgl_title'));
         }
 
@@ -240,8 +231,10 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
                         $this->tabs_gui->clearTargets();
                         if (xdglConfig::getConfigValue(xdglConfig::F_USE_SEARCH)) {
                             //TODO: change method to search
-                            $this->ctrl->redirectByClass([self::class, xdglSearchGUI::class],
-                                xdglSearchGUI::CMD_STANDARD);
+                            $this->ctrl->redirectByClass(
+                                [self::class, xdglSearchGUI::class],
+                                xdglSearchGUI::CMD_STANDARD
+                            );
                         } else {
                             $this->create();
                         }
@@ -293,7 +286,7 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
     /**
      * @return string
      */
-    function getAfterCreationCmd()
+    public function getAfterCreationCmd(): string
     {
         return self::CMD_REDIRECT_PARENT_GUI;
     }
@@ -322,14 +315,13 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
     /**
      * @return string
      */
-    function getStandardCmd()
+    public function getStandardCmd(): string
     {
         return self::CMD_SEND_FILE;
     }
 
-    protected function setTabs()
+    protected function setTabs(): void
     {
-        return true;
     }
 
     /**
@@ -341,11 +333,13 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
      *
      * @return array
      */
-    protected function initCreationForms($a_new_type)
+    protected function initCreationForms(string $new_type): array
     {
         $this->ctrl->setParameter($this, 'new_type', ilDigiLitPlugin::PLUGIN_ID);
 
-        return array(self::CFORM_NEW => $this->initCreateForm($a_new_type));
+        return [
+            self::CFORM_NEW => $this->initCreateForm($new_type)
+        ];
     }
 
     /**
@@ -353,7 +347,7 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
      *
      * @return ilPropertyFormGUI
      */
-    public function initCreateForm($type)
+    protected function initCreateForm(string $new_type): ilPropertyFormGUI
     {
         $xdglRequest = new xdglRequest();
         $creation_form = new xdglRequestFormGUI($this, $xdglRequest);
@@ -362,7 +356,7 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
         return $creation_form->getAsPropertyFormGui();
     }
 
-    public function save()
+    public function save(): void
     {
         $creation_form = new xdglRequestFormGUI($this, new xdglRequest());
         $creation_form->setValuesByPost();
@@ -377,7 +371,7 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
     /**
      * @description provide file as a download
      */
-    protected function sendFile()
+    protected function sendFile()/*: void*/
     {
         global $lng;
         if (ilObjDigiLitAccess::hasAccessToDownload($this->ref_id)) {
@@ -402,11 +396,13 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
         $pl = ilDigiLitPlugin::getInstance();
         $tpl->setTitle($title);
         $tpl->setDescription('');
-        $tpl->setTitleIcon(ilUtil::getImagePath('icon_xdgl.svg',
-            'Customizing/global/plugins/Services/Repository/RepositoryObject/DigiLit'));
+        $tpl->setTitleIcon(ilUtil::getImagePath(
+            'icon_xdgl.svg',
+            'Customizing/global/plugins/Services/Repository/RepositoryObject/DigiLit'
+        ));
     }
 
-    public function infoScreen()
+    public function infoScreen(): void
     {
         $info = new ilInfoScreenGUI($this);
         $info->addSection($this->txt('request_metadata'));
@@ -441,7 +437,7 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
         }
     }
 
-    public function confirmedDelete()
+    public function confirmedDelete(): void
     {
         if (isset($_POST['mref_id'])) {
             $_SESSION['saved_post'] = array_unique(array_merge($_SESSION['saved_post'], $_POST['mref_id']));
@@ -454,7 +450,7 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
         ilUtil::redirect(ilLink::_getLink($parent_ref_id));
     }
 
-    public static function _goto($a_target)
+    public static function _goto(array $a_target): void
     {
         global $ilCtrl;
         $ilObjDigiLitFacadeFacory = new ilObjDigiLitFacadeFactory();
@@ -464,13 +460,10 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
         $ilCtrl->setTargetScript('ilias.php');
         $ilCtrl->setParameterByClass(ilObjDigiLitGUI::class, xdglRequestGUI::XDGL_ID, $a_value);
         $ilCtrl->setParameterByClass(ilObjDigiLitGUI::class, 'ref_id', $a_target[0]);
-        $ilCtrl->redirectByClass([ilObjPluginDispatchGUI::class, ilObjDigiLitGUI::class],
-            ilObjDigiLitGUI::CMD_INFO_SCREEN);
-    }
-
-    public function putObjectInTree(ilObject $a_obj, $a_parent_node_id = null)
-    {
-        parent::putObjectInTree($a_obj, $a_parent_node_id); // TODO: Change the autogenerated stub
+        $ilCtrl->redirectByClass(
+            [ilObjPluginDispatchGUI::class, ilObjDigiLitGUI::class],
+            ilObjDigiLitGUI::CMD_INFO_SCREEN
+        );
     }
 
     /**

@@ -9,22 +9,11 @@
  */
 class xdglConfigFormGUI extends ilPropertyFormGUI
 {
-
-    const A_COLS = 60;
-    const A_ROWS = 5;
-    const F_LIMIT = 'limit';
-    /**
-     * @var xdglConfigGUI
-     */
-    protected $parent_gui;
-    /**
-     * @var ilCtrl
-     */
-    protected $ctrl;
-    /**
-     * @var ilDigiLitPlugin
-     */
-    private $pl;
+    public const A_COLS = 60;
+    public const A_ROWS = 5;
+    public const F_LIMIT = 'limit';
+    protected \xdglConfigGUI $parent_gui;
+    private \ilDigiLitPlugin $pl;
 
     /**
      * @param xdglConfigGUI $parent_gui
@@ -83,8 +72,10 @@ class xdglConfigFormGUI extends ilPropertyFormGUI
 
         $h = new ilCheckboxInputGUI($this->txt(xdglConfig::F_USE_LIBRARIES), xdglConfig::F_USE_LIBRARIES);
         {
-            $only_own = new ilCheckboxInputGUI($this->txt(xdglConfig::F_OWN_LIBRARY_ONLY),
-                xdglConfig::F_OWN_LIBRARY_ONLY);
+            $only_own = new ilCheckboxInputGUI(
+                $this->txt(xdglConfig::F_OWN_LIBRARY_ONLY),
+                xdglConfig::F_OWN_LIBRARY_ONLY
+            );
             $h->addSubItem($only_own);
         }
         $this->addItem($h);
@@ -107,7 +98,7 @@ class xdglConfigFormGUI extends ilPropertyFormGUI
         // Max Requests reached info
         $info = new ilTextareaInputGUI($this->txt(xdglConfig::F_MAX_REQ_TEXT), xdglConfig::F_MAX_REQ_TEXT);
         $info->setUseRte(true);
-        $info->setRteTags(array('a', 'p', 'ul', 'li', 'ol'));
+        $info->setRteTags(['a', 'p', 'ul', 'li', 'ol']);
         $info->setCols(self::A_COLS);
         $info->setRows(self::A_ROWS);
         $this->addItem($info);
@@ -155,7 +146,7 @@ class xdglConfigFormGUI extends ilPropertyFormGUI
         // EULA
         $te = new ilTextareaInputGUI($this->txt(xdglConfig::F_EULA_TEXT), xdglConfig::F_EULA_TEXT);
         $te->setUseRte(true);
-        $te->setRteTags(array('a', 'p', 'ul', 'li', 'ol'));
+        $te->setRteTags(['a', 'p', 'ul', 'li', 'ol']);
         $te->setCols(self::A_COLS);
         $te->setRows(self::A_ROWS);
         $this->addItem($te);
@@ -163,9 +154,9 @@ class xdglConfigFormGUI extends ilPropertyFormGUI
         $this->addCommandButtons();
     }
 
-    public function fillForm()
+    public function fillForm(): void
     {
-        $array = array();
+        $array = [];
         foreach ($this->getItems() as $item) {
             $this->getValuesForItem($item, $array);
         }
@@ -178,7 +169,7 @@ class xdglConfigFormGUI extends ilPropertyFormGUI
      *
      * @internal param $key
      */
-    private function getValuesForItem($item, array &$array)
+    private function getValuesForItem($item, array &$array): void
     {
         if (self::checkItem($item)) {
             $key = $item->getPostVar();
@@ -195,7 +186,7 @@ class xdglConfigFormGUI extends ilPropertyFormGUI
     /**
      * @return bool
      */
-    public function saveObject()
+    public function saveObject(): bool
     {
         if (!$this->checkInput()) {
             return false;
@@ -208,7 +199,7 @@ class xdglConfigFormGUI extends ilPropertyFormGUI
         return true;
     }
 
-    public function checkInput()
+    public function checkInput(): bool
     {
         /**
          * @var ilMultiSelectInputGUI $roles_admin
@@ -219,13 +210,13 @@ class xdglConfigFormGUI extends ilPropertyFormGUI
         $check = true;
         if (ilObjDigiLitAccess::isGlobalAdmin()) {
             $roles_admin = $this->getItemByPostVar(xdglConfig::F_ROLES_ADMIN);
-            if (count($roles_admin->getValue()) == 0) {
+            if ((is_countable($roles_admin->getValue()) ? count($roles_admin->getValue()) : 0) == 0) {
                 $check = false;
                 $roles_admin->setAlert($this->txt("check_role"));
             }
 
             $roles_manager = $this->getItemByPostVar(xdglConfig::F_ROLES_MANAGER);
-            if (count($roles_manager->getValue()) == 0) {
+            if ((is_countable($roles_manager->getValue()) ? count($roles_manager->getValue()) : 0) == 0) {
                 $check = false;
                 $roles_manager->setAlert($this->txt("check_role"));
             }
@@ -251,7 +242,7 @@ class xdglConfigFormGUI extends ilPropertyFormGUI
     /**
      * @param ilFormPropertyGUI $item
      */
-    private function saveValueForItem($item)
+    private function saveValueForItem($item): void
     {
         if (self::checkItem($item)) {
             $key = $item->getPostVar();
@@ -269,9 +260,9 @@ class xdglConfigFormGUI extends ilPropertyFormGUI
      *
      * @return bool
      */
-    public static function checkForSubItem($item)
+    public static function checkForSubItem($item): bool
     {
-        return !$item instanceof ilFormSectionHeaderGUI and !$item instanceof ilMultiSelectInputGUI;
+        return !$item instanceof ilFormSectionHeaderGUI && !$item instanceof ilMultiSelectInputGUI;
     }
 
     /**
@@ -299,8 +290,8 @@ class xdglConfigFormGUI extends ilPropertyFormGUI
     public static function getRoles($filter, $with_text = true)
     {
         global $rbacreview;
-        $opt = array();
-        $role_ids = array();
+        $opt = [];
+        $role_ids = [];
         foreach ($rbacreview->getRolesByFilter($filter) as $role) {
             $opt[$role['obj_id']] = $role['title'] . ' (' . $role['obj_id'] . ')';
             $role_ids[] = $role['obj_id'];

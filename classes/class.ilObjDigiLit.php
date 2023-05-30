@@ -1,24 +1,24 @@
 <?php
 /*
-	+-----------------------------------------------------------------------------+
-	| ILIAS open source                                                           |
-	+-----------------------------------------------------------------------------+
-	| Copyright (c) 1998-2009 ILIAS open source, University of Cologne            |
-	|                                                                             |
-	| This program is free software; you can redistribute it and/or               |
-	| modify it under the terms of the GNU General Public License                 |
-	| as published by the Free Software Foundation; either version 2              |
-	| of the License, or (at your option) any later version.                      |
-	|                                                                             |
-	| This program is distributed in the hope that it will be useful,             |
-	| but WITHOUT ANY WARRANTY; without even the implied warranty of              |
-	| MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               |
-	| GNU General Public License for more details.                                |
-	|                                                                             |
-	| You should have received a copy of the GNU General Public License           |
-	| along with this program; if not, write to the Free Software                 |
-	| Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. |
-	+-----------------------------------------------------------------------------+
+    +-----------------------------------------------------------------------------+
+    | ILIAS open source                                                           |
+    +-----------------------------------------------------------------------------+
+    | Copyright (c) 1998-2009 ILIAS open source, University of Cologne            |
+    |                                                                             |
+    | This program is free software; you can redistribute it and/or               |
+    | modify it under the terms of the GNU General Public License                 |
+    | as published by the Free Software Foundation; either version 2              |
+    | of the License, or (at your option) any later version.                      |
+    |                                                                             |
+    | This program is distributed in the hope that it will be useful,             |
+    | but WITHOUT ANY WARRANTY; without even the implied warranty of              |
+    | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               |
+    | GNU General Public License for more details.                                |
+    |                                                                             |
+    | You should have received a copy of the GNU General Public License           |
+    | along with this program; if not, write to the Free Software                 |
+    | Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. |
+    +-----------------------------------------------------------------------------+
 */
 
 /**
@@ -32,45 +32,30 @@
  */
 class ilObjDigiLit extends ilObjectPlugin
 {
-
     /**
      * @var bool
      */
     protected $object;
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
 
-    /**
-     * @param int $a_ref_id
-     */
-    public function __construct($a_ref_id = 0, $whatever = true)
-    {
-        global $ilDB;
 
-        parent::__construct($a_ref_id);
-        $this->db = $ilDB;
-    }
-
-    final function initType()
+    protected function initType(): void
     {
         $this->setType(ilDigiLitPlugin::PLUGIN_ID);
     }
 
-    public function doCreate()
+    protected function doCreate(bool $clone_mode = false): void
     {
     }
 
-    public function doRead()
+    protected function doRead(): void
     {
     }
 
-    public function doUpdate()
+    protected function doUpdate(): void
     {
     }
 
-    public function doDelete()
+    protected function doDelete(): void
     {
         $use_search = (bool) xdglConfig::getConfigValue(xdglConfig::F_USE_SEARCH);
         $ilObjDigiLitFacadeFactory = new ilObjDigiLitFacadeFactory();
@@ -86,21 +71,12 @@ class ilObjDigiLit extends ilObjectPlugin
         $request_usage->delete();
     }
 
-    /**
-     * @param object $new_obj
-     * @param int    $a_target_id
-     * @param null   $a_copy_id
-     *
-     * @return bool
-     * @throws \Exception
-     */
-    protected function doCloneObject($new_obj, $a_target_id, $a_copy_id = null)
+
+    protected function doCloneObject(ilObject2 $new_obj, int $a_target_id, ?int $a_copy_id = null): void
     {
         $ilObjDigiLitFacadeFactory = new ilObjDigiLitFacadeFactory();
         $xdglRequestUsage = $ilObjDigiLitFacadeFactory->requestUsageFactory()->getInstanceByObjectId($this->getId());
         $ilObjDigiLitFacadeFactory->requestUsageFactory()->copyRequestUsage($xdglRequestUsage, $new_obj->getId());
-
-        return true;
     }
 
     /**

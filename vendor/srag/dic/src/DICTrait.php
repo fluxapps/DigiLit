@@ -17,7 +17,6 @@ use srag\DIC\DigiLit\Version\VersionInterface;
  */
 trait DICTrait
 {
-
     /* *
      * @var string
      *
@@ -32,7 +31,7 @@ trait DICTrait
      *
      * @return DICInterface DIC interface
      */
-    protected static final function dic() : DICInterface
+    final protected static function dic(): DICInterface
     {
         return DICStatic::dic();
     }
@@ -43,7 +42,7 @@ trait DICTrait
      *
      * @return OutputInterface Output interface
      */
-    protected static final function output() : OutputInterface
+    final protected static function output(): OutputInterface
     {
         return DICStatic::output();
     }
@@ -58,7 +57,7 @@ trait DICTrait
      * @throws DICException Class $plugin_class_name not extends ilPlugin!
      * @logs   DEBUG Please implement $plugin_class_name::getInstance()!
      */
-    protected static final function plugin() : PluginInterface
+    final protected static function plugin(): PluginInterface
     {
         self::checkPluginClassNameConst();
 
@@ -71,7 +70,7 @@ trait DICTrait
      *
      * @return VersionInterface Version interface
      */
-    protected static final function version() : VersionInterface
+    final protected static function version(): VersionInterface
     {
         return DICStatic::version();
     }
@@ -80,7 +79,7 @@ trait DICTrait
     /**
      * @throws DICException Your class needs to implement the PLUGIN_CLASS_NAME constant!
      */
-    private static final function checkPluginClassNameConst()/*: void*/
+    private static function checkPluginClassNameConst()/*: void*/
     {
         if (!defined("static::PLUGIN_CLASS_NAME") || empty(static::PLUGIN_CLASS_NAME)) {
             throw new DICException("Your class needs to implement the PLUGIN_CLASS_NAME constant!", DICException::CODE_MISSING_CONST_PLUGIN_CLASS_NAME);

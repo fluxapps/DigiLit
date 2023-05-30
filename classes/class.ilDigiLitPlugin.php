@@ -20,8 +20,8 @@ class ilDigiLitPlugin extends ilRepositoryObjectPlugin
 {
     use DICTrait;
 
-    const PLUGIN_ID = 'xdgl';
-    const PLUGIN_NAME = 'DigiLit';
+    public const PLUGIN_ID = 'xdgl';
+    public const PLUGIN_NAME = 'DigiLit';
     /**
      * @var ilDigiLitPlugin
      */
@@ -40,48 +40,23 @@ class ilDigiLitPlugin extends ilRepositoryObjectPlugin
     }
 
     /**
-     * @var ilDB
-     */
-    protected $db;
-
-    /**
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        global $DIC;
-
-        $this->db = $DIC->database();
-    }
-
-    /**
      * @return string
      */
-    public function getPluginName()
+    public function getPluginName(): string
     {
         return self::PLUGIN_NAME;
     }
 
-    /**
-     * @return bool
-     */
-    protected function uninstallCustom()
+    protected function uninstallCustom(): void
     {
         $this->db->dropTable(xdglConfig::TABLE_NAME, false);
         $this->db->dropTable(xdglLibrarian::TABLE_NAME, false);
         $this->db->dropTable(xdglLibrary::TABLE_NAME, false);
         $this->db->dropTable(xdglRequest::TABLE_NAME, false);
         $this->db->dropTable(xdglRequestUsage::TABLE_NAME, false);
-
-        return true;
     }
 
-    /**
-     * @return bool
-     */
-    public function allowCopy()
+    public function allowCopy(): bool
     {
         return false;
     }
@@ -89,7 +64,7 @@ class ilDigiLitPlugin extends ilRepositoryObjectPlugin
     /**
      * @inheritDoc
      */
-    public function promoteGlobalScreenProvider() : AbstractStaticPluginMainMenuProvider
+    public function promoteGlobalScreenProvider(): AbstractStaticPluginMainMenuProvider
     {
         return new Menu(self::dic()->dic(), $this);
     }

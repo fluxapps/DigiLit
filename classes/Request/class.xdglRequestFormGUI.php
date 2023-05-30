@@ -10,60 +10,40 @@
  */
 class xdglRequestFormGUI extends ilPropertyFormGUI
 {
-
-    const F_COURSE_NAME = 'course_name';
-    const F_PUBLISHING_YEAR = 'publishing_year';
-    const F_PUBLISHER = 'publisher';
-    const F_LOCATION = 'location';
-    const F_EDITOR = 'editor';
-    const F_BOOK = 'book';
-    const F_TITLE = 'title';
-    const F_AUTHOR = 'author';
-    const F_PAGES = 'pages';
-    const F_PAGE_TO = 'page_to';
-    const F_VOLUME_YEAR = 'volume';
-    const F_EDITION_RELEVANT = 'edition_relevant';
-    const F_ISSN = 'issn';
-    const REGEX_MAX_FOUR_DIGITS = '/^[0-9]{0,4}$/i';
-    const REGEX_FOUR_DIGITS_ONLY = '/^[0-9]{4}$/';
-    const F_CRS_REF_ID = 'crs_ref_id';
-    const F_COUNT = 'count';
-    const F_REQUESTER_FULLNAME = 'requester_fullname';
-    const F_REQUESTER_MAILTO = 'requester_mailto';
-    const F_CREATE_DATE = 'create_date';
-    const F_LAST_STATUS_CHANGE = 'last_status_change';
-    const F_MODIFIED_BY = 'modified_by';
-    const F_CONFIRM_EULA = 'confirm_eula';
-    const F_NOTICE = 'notice';
-    const F_INTERNAL_NOTICE = 'internal_notice';
-    /**
-     * @var bool
-     */
-    private $is_new;
-    /**
-     * @var bool
-     */
-    private $view;
-    /**
-     * @var bool
-     */
-    private $infopage;
-    /**
-     * @var xdglRequest
-     */
-    protected $request;
+    public const F_COURSE_NAME = 'course_name';
+    public const F_PUBLISHING_YEAR = 'publishing_year';
+    public const F_PUBLISHER = 'publisher';
+    public const F_LOCATION = 'location';
+    public const F_EDITOR = 'editor';
+    public const F_BOOK = 'book';
+    public const F_TITLE = 'title';
+    public const F_AUTHOR = 'author';
+    public const F_PAGES = 'pages';
+    public const F_PAGE_TO = 'page_to';
+    public const F_VOLUME_YEAR = 'volume';
+    public const F_EDITION_RELEVANT = 'edition_relevant';
+    public const F_ISSN = 'issn';
+    public const REGEX_MAX_FOUR_DIGITS = '/^[0-9]{0,4}$/i';
+    public const REGEX_FOUR_DIGITS_ONLY = '/^[0-9]{4}$/';
+    public const F_CRS_REF_ID = 'crs_ref_id';
+    public const F_COUNT = 'count';
+    public const F_REQUESTER_FULLNAME = 'requester_fullname';
+    public const F_REQUESTER_MAILTO = 'requester_mailto';
+    public const F_CREATE_DATE = 'create_date';
+    public const F_LAST_STATUS_CHANGE = 'last_status_change';
+    public const F_MODIFIED_BY = 'modified_by';
+    public const F_CONFIRM_EULA = 'confirm_eula';
+    public const F_NOTICE = 'notice';
+    public const F_INTERNAL_NOTICE = 'internal_notice';
+    private bool $is_new;
+    private bool $view;
+    private bool $infopage;
+    protected \xdglRequest $request;
     /**
      * @var ilObjDigiLitGUI
      */
     protected $parent_gui;
-    /**
-     * @var ilCtrl
-     */
-    protected $ctrl;
-    /**
-     * @var ilDigiLitPlugin
-     */
-    protected $pl;
+    protected \ilDigiLitPlugin $pl;
     /**
      * @var bool
      */
@@ -106,7 +86,7 @@ class xdglRequestFormGUI extends ilPropertyFormGUI
      *
      * @return ilPropertyFormGUI This object but as an ilPropertyFormGUI instead of a xdglRequestFormGUI
      */
-    public function getAsPropertyFormGui()
+    public function getAsPropertyFormGui(): \ilPropertyFormGUI
     {
         $ilPropertyFormGUI = new ilPropertyFormGUI();
         $ilPropertyFormGUI->setFormAction($this->getFormAction());
@@ -121,7 +101,7 @@ class xdglRequestFormGUI extends ilPropertyFormGUI
         return $ilPropertyFormGUI;
     }
 
-    public function addToInfoScreen(ilInfoScreenGUI $ilInfoScreenGUI)
+    public function addToInfoScreen(ilInfoScreenGUI $ilInfoScreenGUI): void
     {
     }
 
@@ -261,34 +241,19 @@ class xdglRequestFormGUI extends ilPropertyFormGUI
     /**
      * @param null $ref_id
      */
-    public function fillFormRandomized($ref_id = null)
+    public function fillFormRandomized($ref_id = null): void
     {
         if ($ref_id) {
             $this->request->setCrsRefId($ref_id);
         }
-        $array = array(
-            self::F_AUTHOR => 'Author Name',
-            self::F_TITLE => 'Article Name',
-            self::F_BOOK => 'The Book',
-            self::F_EDITOR => '',
-            self::F_LOCATION => 'Berne',
-            self::F_PUBLISHER => 'Publisher Name',
-            self::F_PUBLISHING_YEAR => 2004,
-            self::F_PAGES => '50-89',
-            self::F_EDITION_RELEVANT => false,
-            self::F_ISSN => '',
-            self::F_VOLUME_YEAR => 2004,
-            self::F_NOTICE => 'This Text only!',
-            self::F_COURSE_NAME => $this->request->getCourseTitle(),
-
-        );
+        $array = [self::F_AUTHOR => 'Author Name', self::F_TITLE => 'Article Name', self::F_BOOK => 'The Book', self::F_EDITOR => '', self::F_LOCATION => 'Berne', self::F_PUBLISHER => 'Publisher Name', self::F_PUBLISHING_YEAR => 2004, self::F_PAGES => '50-89', self::F_EDITION_RELEVANT => false, self::F_ISSN => '', self::F_VOLUME_YEAR => 2004, self::F_NOTICE => 'This Text only!', self::F_COURSE_NAME => $this->request->getCourseTitle()];
         $this->setValuesByArray($array);
     }
 
     /**
      * @param int $ref_id
      */
-    public function fillForm($ref_id = null)
+    public function fillForm($ref_id = null): void
     {
         if ($ref_id) {
             $this->request->setCrsRefId($ref_id);
@@ -296,28 +261,7 @@ class xdglRequestFormGUI extends ilPropertyFormGUI
         $ilObjUserRequester = new ilObjUser($this->request->getRequesterUsrId());
         $ilObjUserModified = new ilObjUser($this->request->getLastModifiedByUsrId());
 
-        $array = array(
-            self::F_AUTHOR => $this->request->getAuthor(),
-            self::F_TITLE => $this->request->getTitle(),
-            self::F_BOOK => $this->request->getBook(),
-            self::F_EDITOR => $this->request->getEditor(),
-            self::F_LOCATION => $this->request->getLocation(),
-            self::F_PUBLISHER => $this->request->getPublisher(),
-            self::F_PUBLISHING_YEAR => $this->request->getPublishingYear(),
-            self::F_PAGES => $this->request->getPages(),
-            self::F_EDITION_RELEVANT => $this->request->getEditionRelevant(),
-            self::F_ISSN => $this->request->getIssn(),
-            self::F_COUNT => $this->request->getAmoutOfDigiLitsInCourse() . '/' . xdglConfig::getConfigValue(xdglConfig::F_MAX_DIGILITS),
-            self::F_REQUESTER_FULLNAME => $ilObjUserRequester->getPresentationTitle(),
-            self::F_REQUESTER_MAILTO => $ilObjUserRequester->getEmail(),
-            self::F_CREATE_DATE => date('d.m.Y - H:i:s', $this->request->getCreateDate()),
-            self::F_LAST_STATUS_CHANGE => date('d.m.Y - H:i:s', $this->request->getDateLastStatusChange()),
-            self::F_MODIFIED_BY => $ilObjUserModified->getPresentationTitle(),
-            self::F_VOLUME_YEAR => $this->request->getVolume(),
-            self::F_NOTICE => $this->request->getNotice(),
-            self::F_INTERNAL_NOTICE => $this->request->getInternalNotice(),
-            self::F_COURSE_NAME => $this->request->getCourseTitle(),
-        );
+        $array = [self::F_AUTHOR => $this->request->getAuthor(), self::F_TITLE => $this->request->getTitle(), self::F_BOOK => $this->request->getBook(), self::F_EDITOR => $this->request->getEditor(), self::F_LOCATION => $this->request->getLocation(), self::F_PUBLISHER => $this->request->getPublisher(), self::F_PUBLISHING_YEAR => $this->request->getPublishingYear(), self::F_PAGES => $this->request->getPages(), self::F_EDITION_RELEVANT => $this->request->getEditionRelevant(), self::F_ISSN => $this->request->getIssn(), self::F_COUNT => $this->request->getAmoutOfDigiLitsInCourse() . '/' . xdglConfig::getConfigValue(xdglConfig::F_MAX_DIGILITS), self::F_REQUESTER_FULLNAME => $ilObjUserRequester->getPresentationTitle(), self::F_REQUESTER_MAILTO => $ilObjUserRequester->getEmail(), self::F_CREATE_DATE => date('d.m.Y - H:i:s', $this->request->getCreateDate()), self::F_LAST_STATUS_CHANGE => date('d.m.Y - H:i:s', $this->request->getDateLastStatusChange()), self::F_MODIFIED_BY => $ilObjUserModified->getPresentationTitle(), self::F_VOLUME_YEAR => $this->request->getVolume(), self::F_NOTICE => $this->request->getNotice(), self::F_INTERNAL_NOTICE => $this->request->getInternalNotice(), self::F_COURSE_NAME => $this->request->getCourseTitle()];
         if ($this->is_new) {
             $amount_of_existing_digi_lits = $this->request->getAmoutOfDigiLitsInCourse();
             $array[self::F_COUNT] = $amount_of_existing_digi_lits + 1 . '/' . xdglConfig::getConfigValue(xdglConfig::F_MAX_DIGILITS);
@@ -336,12 +280,12 @@ class xdglRequestFormGUI extends ilPropertyFormGUI
      *
      * @return bool
      */
-    public function fillObject($ref_id)
+    public function fillObject($ref_id): bool
     {
         if (!$this->checkInput()) {
             return false;
         }
-        if ($this->is_new and !$this->getInput(self::F_CONFIRM_EULA)) {
+        if ($this->is_new && !$this->getInput(self::F_CONFIRM_EULA)) {
             /**
              * @var ilCheckboxInputGUI $item
              */
@@ -371,7 +315,7 @@ class xdglRequestFormGUI extends ilPropertyFormGUI
         $this->request->setEditionRelevant($this->getInput(self::F_EDITION_RELEVANT));
         $this->request->setIssn($this->getInput(self::F_ISSN));
 
-        if ($this->is_new and $ref_id) {
+        if ($this->is_new && $ref_id) {
             $this->request->setCrsRefId($ref_id);
         }
 
@@ -418,14 +362,12 @@ class xdglRequestFormGUI extends ilPropertyFormGUI
                 $this->addCommandButton(xdglRequestGUI::CMD_REPLACE_FILE, $this->pl->txt('request_replace_file'));
                 $this->addCommandButton(xdglRequestGUI::CMD_DELETE_FILE, $this->pl->txt('request_delete_file'));
             }
+        } elseif ($this->is_new) {
+            $this->setTitle($this->pl->txt('request_create'));
+            $this->addCommandButton(xdglRequestGUI::CMD_SAVE, $this->pl->txt('request_create'));
         } else {
-            if ($this->is_new) {
-                $this->setTitle($this->pl->txt('request_create'));
-                $this->addCommandButton(xdglRequestGUI::CMD_SAVE, $this->pl->txt('request_create'));
-            } else {
-                $this->setTitle($this->pl->txt('request_edit'));
-                $this->addCommandButton(xdglRequestGUI::CMD_UPDATE, $this->pl->txt('request_update'));
-            }
+            $this->setTitle($this->pl->txt('request_edit'));
+            $this->addCommandButton(xdglRequestGUI::CMD_UPDATE, $this->pl->txt('request_update'));
         }
 
         $this->addCommandButton(xdglRequestGUI::CMD_CANCEL, $this->pl->txt('request_cancel'));

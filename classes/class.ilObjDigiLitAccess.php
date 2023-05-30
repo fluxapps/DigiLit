@@ -1,24 +1,24 @@
 <?php
 /*
-	+-----------------------------------------------------------------------------+
-	| ILIAS open source                                                           |
-	+-----------------------------------------------------------------------------+
-	| Copyright (c) 1998-2001 ILIAS open source, University of Cologne            |
-	|                                                                             |
-	| This program is free software; you can redistribute it and/or               |
-	| modify it under the terms of the GNU General Public License                 |
-	| as published by the Free Software Foundation; either version 2              |
-	| of the License, or (at your option) any later version.                      |
-	|                                                                             |
-	| This program is distributed in the hope that it will be useful,             |
-	| but WITHOUT ANY WARRANTY; without even the implied warranty of              |
-	| MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               |
-	| GNU General Public License for more details.                                |
-	|                                                                             |
-	| You should have received a copy of the GNU General Public License           |
-	| along with this program; if not, write to the Free Software                 |
-	| Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. |
-	+-----------------------------------------------------------------------------+
+    +-----------------------------------------------------------------------------+
+    | ILIAS open source                                                           |
+    +-----------------------------------------------------------------------------+
+    | Copyright (c) 1998-2001 ILIAS open source, University of Cologne            |
+    |                                                                             |
+    | This program is free software; you can redistribute it and/or               |
+    | modify it under the terms of the GNU General Public License                 |
+    | as published by the Free Software Foundation; either version 2              |
+    | of the License, or (at your option) any later version.                      |
+    |                                                                             |
+    | This program is distributed in the hope that it will be useful,             |
+    | but WITHOUT ANY WARRANTY; without even the implied warranty of              |
+    | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               |
+    | GNU General Public License for more details.                                |
+    |                                                                             |
+    | You should have received a copy of the GNU General Public License           |
+    | along with this program; if not, write to the Free Software                 |
+    | Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. |
+    +-----------------------------------------------------------------------------+
 */
 
 /**
@@ -35,8 +35,7 @@
  */
 class ilObjDigiLitAccess extends ilObjectPluginAccess
 {
-
-    const TXT_PERMISSION_DENIED = 'permission_denied';
+    public const TXT_PERMISSION_DENIED = 'permission_denied';
     /**
      * @var array
      */
@@ -51,19 +50,20 @@ class ilObjDigiLitAccess extends ilObjectPluginAccess
      *
      * @return bool
      */
-    function _checkAccess($a_cmd, $a_permission, $a_ref_id, $a_obj_id, $a_user_id = '')
+    public function _checkAccess(string $cmd, string $permission, int $ref_id, int $obj_id, /*?int*/ $user_id = null): bool
     {
         global $ilUser, $ilAccess;
-        /**
-         * @var ilAccessHandler $ilAccess
-         */
-        if ($a_user_id == '') {
-            $a_user_id = $ilUser->getId();
+        if ($user_id === null) {
+            $user_id = $ilUser->getId();
         }
-        switch ($a_permission) {
+        switch ($permission) {
             case 'read':
-                if (!ilObjDigiLitAccess::checkOnline($a_obj_id) and !$ilAccess->checkAccessOfUser($a_user_id, 'write',
-                        '', $a_ref_id)) {
+                if (!ilObjDigiLitAccess::checkOnline($obj_id) && !$ilAccess->checkAccessOfUser(
+                    $user_id,
+                    'write',
+                    '',
+                    $ref_id
+                )) {
                     return true;
                 }
                 break;
@@ -94,8 +94,12 @@ class ilObjDigiLitAccess extends ilObjectPluginAccess
 
         $is_member = ($p->isAdmin($a_usr_id) or $p->isTutor($a_usr_id) or $p->isMember($a_usr_id));
 
-        $checkAccess = (new self)->_checkAccess('read', 'read', $digi_lit_ref_id,
-            ilObject2::_lookupObjectId($digi_lit_ref_id));
+        $checkAccess = (new self())->_checkAccess(
+            'read',
+            'read',
+            $digi_lit_ref_id,
+            ilObject2::_lookupObjectId($digi_lit_ref_id)
+        );
 
         $not_anonymous = $ilUser->getId() != ANONYMOUS_USER_ID;
 
@@ -206,7 +210,7 @@ class ilObjDigiLitAccess extends ilObjectPluginAccess
      *
      * @return bool
      */
-    static function checkOnline($a_id)
+    public static function checkOnline($a_id)
     {
         return true;
     }
@@ -216,7 +220,7 @@ class ilObjDigiLitAccess extends ilObjectPluginAccess
      *
      * @return bool
      */
-    public static function hasAccessToMainGUI(bool $redirect = false) : bool
+    public static function hasAccessToMainGUI(bool $redirect = false): bool
     {
         if (self::isAdmin()) {
             return true;

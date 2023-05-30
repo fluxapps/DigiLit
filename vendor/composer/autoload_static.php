@@ -6,31 +6,32 @@ namespace Composer\Autoload;
 
 class ComposerStaticInitfc153e3b3468af7e75c1c26c68b008ed
 {
-    public static $prefixLengthsPsr4 = array (
-        's' => 
-        array (
+    public static $prefixLengthsPsr4 = array(
+        's' =>
+        array(
             'srag\\Plugins\\DigiLit\\' => 21,
             'srag\\LibrariesNamespaceChanger\\' => 31,
             'srag\\DIC\\DigiLit\\' => 17,
         ),
     );
 
-    public static $prefixDirsPsr4 = array (
-        'srag\\Plugins\\DigiLit\\' => 
-        array (
+    public static $prefixDirsPsr4 = array(
+        'srag\\Plugins\\DigiLit\\' =>
+        array(
             0 => __DIR__ . '/../..' . '/src',
         ),
-        'srag\\LibrariesNamespaceChanger\\' => 
-        array (
+        'srag\\LibrariesNamespaceChanger\\' =>
+        array(
             0 => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src',
         ),
-        'srag\\DIC\\DigiLit\\' => 
-        array (
+        'srag\\DIC\\DigiLit\\' =>
+        array(
             0 => __DIR__ . '/..' . '/srag/dic/src',
         ),
     );
 
-    public static $classMap = array (
+    public static $classMap = array(
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'ilDigiLitConfigGUI' => __DIR__ . '/../..' . '/classes/class.ilDigiLitConfigGUI.php',
         'ilDigiLitPlugin' => __DIR__ . '/../..' . '/classes/class.ilDigiLitPlugin.php',
         'ilObjDigiLit' => __DIR__ . '/../..' . '/classes/class.ilObjDigiLit.php',
@@ -38,6 +39,39 @@ class ComposerStaticInitfc153e3b3468af7e75c1c26c68b008ed
         'ilObjDigiLitFacadeFactory' => __DIR__ . '/../..' . '/classes/Facade/class.ilObjDigiLitFacadeFactory.php',
         'ilObjDigiLitGUI' => __DIR__ . '/../..' . '/classes/class.ilObjDigiLitGUI.php',
         'ilObjDigiLitListGUI' => __DIR__ . '/../..' . '/classes/class.ilObjDigiLitListGUI.php',
+        'srag\\DIC\\DigiLit\\DICStatic' => __DIR__ . '/..' . '/srag/dic/src/DICStatic.php',
+        'srag\\DIC\\DigiLit\\DICStaticInterface' => __DIR__ . '/..' . '/srag/dic/src/DICStaticInterface.php',
+        'srag\\DIC\\DigiLit\\DICTrait' => __DIR__ . '/..' . '/srag/dic/src/DICTrait.php',
+        'srag\\DIC\\DigiLit\\DIC\\AbstractDIC' => __DIR__ . '/..' . '/srag/dic/src/DIC/AbstractDIC.php',
+        'srag\\DIC\\DigiLit\\DIC\\DICInterface' => __DIR__ . '/..' . '/srag/dic/src/DIC/DICInterface.php',
+        'srag\\DIC\\DigiLit\\DIC\\Implementation\\ILIAS54DIC' => __DIR__ . '/..' . '/srag/dic/src/DIC/Implementation/ILIAS54DIC.php',
+        'srag\\DIC\\DigiLit\\DIC\\Implementation\\ILIAS60DIC' => __DIR__ . '/..' . '/srag/dic/src/DIC/Implementation/ILIAS60DIC.php',
+        'srag\\DIC\\DigiLit\\Database\\AbstractILIASDatabaseDetector' => __DIR__ . '/..' . '/srag/dic/src/Database/AbstractILIASDatabaseDetector.php',
+        'srag\\DIC\\DigiLit\\Database\\DatabaseDetector' => __DIR__ . '/..' . '/srag/dic/src/Database/DatabaseDetector.php',
+        'srag\\DIC\\DigiLit\\Database\\DatabaseInterface' => __DIR__ . '/..' . '/srag/dic/src/Database/DatabaseInterface.php',
+        'srag\\DIC\\DigiLit\\Database\\PdoContextHelper' => __DIR__ . '/..' . '/srag/dic/src/Database/PdoContextHelper.php',
+        'srag\\DIC\\DigiLit\\Database\\PdoStatementContextHelper' => __DIR__ . '/..' . '/srag/dic/src/Database/PdoStatementContextHelper.php',
+        'srag\\DIC\\DigiLit\\Exception\\DICException' => __DIR__ . '/..' . '/srag/dic/src/Exception/DICException.php',
+        'srag\\DIC\\DigiLit\\Loader\\AbstractLoaderDetector' => __DIR__ . '/..' . '/srag/dic/src/Loader/AbstractLoaderDetector.php',
+        'srag\\DIC\\DigiLit\\Output\\Output' => __DIR__ . '/..' . '/srag/dic/src/Output/Output.php',
+        'srag\\DIC\\DigiLit\\Output\\OutputInterface' => __DIR__ . '/..' . '/srag/dic/src/Output/OutputInterface.php',
+        'srag\\DIC\\DigiLit\\PHPVersionChecker' => __DIR__ . '/..' . '/srag/dic/src/PHPVersionChecker.php',
+        'srag\\DIC\\DigiLit\\Plugin\\Plugin' => __DIR__ . '/..' . '/srag/dic/src/Plugin/Plugin.php',
+        'srag\\DIC\\DigiLit\\Plugin\\PluginInterface' => __DIR__ . '/..' . '/srag/dic/src/Plugin/PluginInterface.php',
+        'srag\\DIC\\DigiLit\\Plugin\\Pluginable' => __DIR__ . '/..' . '/srag/dic/src/Plugin/Pluginable.php',
+        'srag\\DIC\\DigiLit\\Util\\LibraryLanguageInstaller' => __DIR__ . '/..' . '/srag/dic/src/Util/LibraryLanguageInstaller.php',
+        'srag\\DIC\\DigiLit\\Version\\Version' => __DIR__ . '/..' . '/srag/dic/src/Version/Version.php',
+        'srag\\DIC\\DigiLit\\Version\\VersionInterface' => __DIR__ . '/..' . '/srag/dic/src/Version/VersionInterface.php',
+        'srag\\LibrariesNamespaceChanger\\GeneratePluginPhpAndXml' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/GeneratePluginPhpAndXml.php',
+        'srag\\LibrariesNamespaceChanger\\LibrariesNamespaceChanger' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/LibrariesNamespaceChanger.php',
+        'srag\\LibrariesNamespaceChanger\\PHP72Backport' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/PHP72Backport.php',
+        'srag\\LibrariesNamespaceChanger\\PHP7Backport' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/PHP7Backport.php',
+        'srag\\LibrariesNamespaceChanger\\RemovePHP72Backport' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/RemovePHP72Backport.php',
+        'srag\\LibrariesNamespaceChanger\\UpdatePluginReadme' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/UpdatePluginReadme.php',
+        'srag\\Plugins\\DigiLit\\Interfaces\\Facade\\ilObjDigiLitFacadeInterface' => __DIR__ . '/../..' . '/src/Interfaces/Facade/ilObjDigiLitFacadeInterface.php',
+        'srag\\Plugins\\DigiLit\\Interfaces\\RequestUsage\\xdglRequestUsageFactoryInterface' => __DIR__ . '/../..' . '/src/Interfaces/RequestUsage/xdglRequestUsageFactoryInterface.php',
+        'srag\\Plugins\\DigiLit\\Interfaces\\RequestUsage\\xdglRequestUsageInterface' => __DIR__ . '/../..' . '/src/Interfaces/RequestUsage/xdglRequestUsageInterface.php',
+        'srag\\Plugins\\DigiLit\\Menu\\Menu' => __DIR__ . '/../..' . '/src/Menu/Menu.php',
         'xdglConfig' => __DIR__ . '/../..' . '/classes/Config/class.xdglConfig.php',
         'xdglConfigFormGUI' => __DIR__ . '/../..' . '/classes/Config/class.xdglConfigFormGUI.php',
         'xdglConfigGUI' => __DIR__ . '/../..' . '/classes/Config/class.xdglConfigGUI.php',
@@ -69,7 +103,6 @@ class ComposerStaticInitfc153e3b3468af7e75c1c26c68b008ed
             $loader->prefixLengthsPsr4 = ComposerStaticInitfc153e3b3468af7e75c1c26c68b008ed::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitfc153e3b3468af7e75c1c26c68b008ed::$prefixDirsPsr4;
             $loader->classMap = ComposerStaticInitfc153e3b3468af7e75c1c26c68b008ed::$classMap;
-
         }, null, ClassLoader::class);
     }
 }

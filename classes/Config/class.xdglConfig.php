@@ -8,42 +8,41 @@
  */
 class xdglConfig extends ActiveRecord
 {
-
-    const TABLE_NAME = 'xdgl_config';
-    const CONFIG_VERSION = 2;
-    const F_ROLES_ADMIN = 'permission';
-    const F_ROLES_MANAGER = 'permission_manager';
-    const F_MAIL_NEW_REQUEST = 'mail_new_request';
-    const F_MAIL_REJECTED = 'mail_rejected';
-    const F_MAIL_UPLOADED = 'mail_uploaded';
-    const F_MAIL_MOVED = 'mail_moved';
-    const F_MAIL = 'mail';
-    const F_CONFIG_VERSION = 'config_version';
-    const F_MAX_DIGILITS = 'max_digilits';
-    const F_EULA_TEXT = 'eula_text';
-    const F_USE_LIBRARIES = 'use_libraries';
-    const F_USE_SEARCH = 'use_search';
-    const F_OWN_LIBRARY_ONLY = 'own_library_only';
-    const F_USE_REGEX = 'use_regex';
-    const F_MAX_REQ_TEXT = 'max_requests_text';
-    const F_REGEX = 'regex';
+    public const TABLE_NAME = 'xdgl_config';
+    public const CONFIG_VERSION = 2;
+    public const F_ROLES_ADMIN = 'permission';
+    public const F_ROLES_MANAGER = 'permission_manager';
+    public const F_MAIL_NEW_REQUEST = 'mail_new_request';
+    public const F_MAIL_REJECTED = 'mail_rejected';
+    public const F_MAIL_UPLOADED = 'mail_uploaded';
+    public const F_MAIL_MOVED = 'mail_moved';
+    public const F_MAIL = 'mail';
+    public const F_CONFIG_VERSION = 'config_version';
+    public const F_MAX_DIGILITS = 'max_digilits';
+    public const F_EULA_TEXT = 'eula_text';
+    public const F_USE_LIBRARIES = 'use_libraries';
+    public const F_USE_SEARCH = 'use_search';
+    public const F_OWN_LIBRARY_ONLY = 'own_library_only';
+    public const F_USE_REGEX = 'use_regex';
+    public const F_MAX_REQ_TEXT = 'max_requests_text';
+    public const F_REGEX = 'regex';
     /**
      * @var array
      */
-    protected static $cache = array();
+    protected static $cache = [];
     /**
      * @var array
      */
-    protected static $cache_loaded = array();
+    protected static $cache_loaded = [];
     /**
      * @var bool
      */
-    protected $ar_safe_read = false;
+    protected bool $ar_safe_read = false;
 
     /**
      * @return string
      */
-    public function getConnectorContainerName()
+    public function getConnectorContainerName(): string
     {
         return self::TABLE_NAME;
     }
@@ -52,7 +51,7 @@ class xdglConfig extends ActiveRecord
      * @return string
      * @deprecated
      */
-    public static function returnDbTableName()
+    public static function returnDbTableName(): string
     {
         return self::TABLE_NAME;
     }
@@ -60,7 +59,7 @@ class xdglConfig extends ActiveRecord
     /**
      * @return bool
      */
-    public static function isConfigUpToDate()
+    public static function isConfigUpToDate(): bool
     {
         return self::getConfigValue(self::F_CONFIG_VERSION) == self::CONFIG_VERSION;
     }
@@ -89,7 +88,7 @@ class xdglConfig extends ActiveRecord
             if ($_SERVER['REMOTE_ADDR'] == '212.41.220.231') {
                 //				var_dump(json_decode($obj->getValue())); // FSX
             }
-            self::$cache[$name] = json_decode($obj->getValue());
+            self::$cache[$name] = json_decode($obj->getValue(), null, 512, JSON_THROW_ON_ERROR);
             self::$cache_loaded[$name] = true;
         }
 
@@ -100,12 +99,12 @@ class xdglConfig extends ActiveRecord
      * @param string $name
      * @param mixed  $value
      */
-    public static function setConfigValue($name, $value)
+    public static function setConfigValue($name, $value): void
     {
         $obj = new self($name);
-        $obj->setValue(json_encode($value));
+        $obj->setValue(json_encode($value, JSON_THROW_ON_ERROR));
 
-        if (self::where(array('name' => $name))->hasSets()) {
+        if (self::where(['name' => $name])->hasSets()) {
             $obj->update();
         } else {
             $obj->create();
@@ -137,19 +136,15 @@ class xdglConfig extends ActiveRecord
      *
      * @return bool
      */
-    public static function isRegexValid($regex)
+    public static function isRegexValid($regex): bool
     {
-        if (preg_match("/^\/.+\/[a-z]*$/i", $regex)) {
-            return true;
-        }
-
-        return false;
+        return (bool) preg_match("/^\/.+\/[a-z]*$/i", $regex);
     }
 
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name = $name;
     }
@@ -165,7 +160,7 @@ class xdglConfig extends ActiveRecord
     /**
      * @param string $value
      */
-    public function setValue($value)
+    public function setValue($value): void
     {
         $this->value = $value;
     }

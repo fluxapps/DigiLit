@@ -12,22 +12,18 @@
  */
 class xdglRequestTableGUI extends ilTable2GUI
 {
-
-    const TBL_XDGL_REQUEST_OVERVIEWS = 'tbl_xdgl_request_overviews_v3';
-    /**
-     * @var ilDigiLitPlugin
-     */
-    protected $pl;
+    public const TBL_XDGL_REQUEST_OVERVIEWS = 'tbl_xdgl_request_overviews_v3';
+    protected \ilDigiLitPlugin $pl;
     /**
      * @var array
      */
-    protected $filter = array();
+    protected $filter = [];
 
     /**
      * @param xdglRequestGUI $a_parent_obj
      * @param string         $a_parent_cmd
      */
-    public function __construct(xdglRequestGUI $a_parent_obj, $a_parent_cmd)
+    public function __construct(xdglRequestGUI $a_parent_obj, string $a_parent_cmd)
     {
         /**
          * @var ilCtrl $ilCtrl
@@ -41,8 +37,10 @@ class xdglRequestTableGUI extends ilTable2GUI
         $this->ctrl->saveParameter($a_parent_obj, $this->getNavParameter());
         parent::__construct($a_parent_obj, $a_parent_cmd);
         $this->parent_obj = $a_parent_obj;
-        $this->setRowTemplate('tpl.requests_overview_row.html',
-            'Customizing/global/plugins/Services/Repository/RepositoryObject/DigiLit');
+        $this->setRowTemplate(
+            'tpl.requests_overview_row.html',
+            'Customizing/global/plugins/Services/Repository/RepositoryObject/DigiLit'
+        );
         $this->setFormAction($this->ctrl->getFormAction($a_parent_obj));
         $this->initColums();
         $this->initFilters();
@@ -56,7 +54,7 @@ class xdglRequestTableGUI extends ilTable2GUI
     /**
      * @param array $a_set
      */
-    public function fillRow($a_set)
+    protected function fillRow(array $a_set): void
     {
         $this->tpl->setVariable('VAL_EXT_ID', $a_set['ext_id']);
         $this->tpl->setVariable('VAL_TITLE', $a_set['title']);
@@ -73,7 +71,7 @@ class xdglRequestTableGUI extends ilTable2GUI
         $this->addActionMenu($a_set);
     }
 
-    protected function initColums()
+    protected function initColums()/*: void*/
     {
         //		$this->addColumn($this->pl->txt('request_ext_id'), NULL);
         $this->addColumn($this->pl->txt('request_ext_id'), 'ext_id');
@@ -97,7 +95,6 @@ class xdglRequestTableGUI extends ilTable2GUI
      */
     protected function addActionMenu($a_set)
     {
-
         $current_selection_list = new ilAdvancedSelectionListGUI();
         $current_selection_list->setListTitle($this->pl->txt('common_actions'));
 
@@ -111,20 +108,41 @@ class xdglRequestTableGUI extends ilTable2GUI
         switch ($a_set['status']) {
             case xdglRequest::STATUS_NEW:
             case xdglRequest::STATUS_IN_PROGRRESS:
-                $current_selection_list->addItem($this->pl->txt('request_view'), 'view_request',
-                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_VIEW));
-                $current_selection_list->addItem($this->pl->txt('request_edit'), 'edit_request',
-                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_EDIT));
-                $current_selection_list->addItem($this->pl->txt('upload_title'), 'upload_pdf',
-                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_SELECT_FILE));
-                $current_selection_list->addItem($this->pl->txt('request_change_status_to_wip'), 'change_status_to_wip',
-                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_CHANGE_STATUS_TO_WIP));
-                $current_selection_list->addItem($this->pl->txt('request_refuse'), 'refuse_request',
-                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CDM_CONFIRM_REFUSE));
-                $current_selection_list->addItem($this->pl->txt('request_assign'), 'assign_request',
-                    $this->ctrl->getLinkTargetByClass(xdglLibraryGUI::class, xdglLibraryGUI::CMD_ASSIGN_LIBRARY));
-                $current_selection_list->addItem($this->pl->txt('delete_request'), 'delete_request',
-                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_DELETE_REQUEST));
+                $current_selection_list->addItem(
+                    $this->pl->txt('request_view'),
+                    'view_request',
+                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_VIEW)
+                );
+                $current_selection_list->addItem(
+                    $this->pl->txt('request_edit'),
+                    'edit_request',
+                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_EDIT)
+                );
+                $current_selection_list->addItem(
+                    $this->pl->txt('upload_title'),
+                    'upload_pdf',
+                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_SELECT_FILE)
+                );
+                $current_selection_list->addItem(
+                    $this->pl->txt('request_change_status_to_wip'),
+                    'change_status_to_wip',
+                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_CHANGE_STATUS_TO_WIP)
+                );
+                $current_selection_list->addItem(
+                    $this->pl->txt('request_refuse'),
+                    'refuse_request',
+                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CDM_CONFIRM_REFUSE)
+                );
+                $current_selection_list->addItem(
+                    $this->pl->txt('request_assign'),
+                    'assign_request',
+                    $this->ctrl->getLinkTargetByClass(xdglLibraryGUI::class, xdglLibraryGUI::CMD_ASSIGN_LIBRARY)
+                );
+                $current_selection_list->addItem(
+                    $this->pl->txt('delete_request'),
+                    'delete_request',
+                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_DELETE_REQUEST)
+                );
                 break;
             //			case xdglRequest::STATUS_IN_PROGRRESS:
             //				$current_selection_list->addItem($this->pl->txt('request_view'), 'view_request', $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_VIEW));
@@ -133,18 +151,36 @@ class xdglRequestTableGUI extends ilTable2GUI
             //				$current_selection_list->addItem($this->pl->txt('request_refuse'), 'refuse_request', $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CDM_CONFIRM_REFUSE));
             //				break;
             case xdglRequest::STATUS_RELEASED:
-                $current_selection_list->addItem($this->pl->txt('request_view'), 'view_request',
-                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_VIEW));
-                $current_selection_list->addItem($this->pl->txt('request_edit'), 'edit_request',
-                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_EDIT));
-                $current_selection_list->addItem($this->pl->txt('request_download_file'), 'request_download_file',
-                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_DOWNLOAD_FILE));
-                $current_selection_list->addItem($this->pl->txt('request_replace_file'), 'request_replace_file',
-                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_REPLACE_FILE));
-                $current_selection_list->addItem($this->pl->txt('request_delete_file'), 'request_delete_file',
-                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_DELETE_FILE));
-                $current_selection_list->addItem($this->pl->txt('delete_request'), 'delete_request',
-                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_DELETE_REQUEST));
+                $current_selection_list->addItem(
+                    $this->pl->txt('request_view'),
+                    'view_request',
+                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_VIEW)
+                );
+                $current_selection_list->addItem(
+                    $this->pl->txt('request_edit'),
+                    'edit_request',
+                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_EDIT)
+                );
+                $current_selection_list->addItem(
+                    $this->pl->txt('request_download_file'),
+                    'request_download_file',
+                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_DOWNLOAD_FILE)
+                );
+                $current_selection_list->addItem(
+                    $this->pl->txt('request_replace_file'),
+                    'request_replace_file',
+                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_REPLACE_FILE)
+                );
+                $current_selection_list->addItem(
+                    $this->pl->txt('request_delete_file'),
+                    'request_delete_file',
+                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_DELETE_FILE)
+                );
+                $current_selection_list->addItem(
+                    $this->pl->txt('delete_request'),
+                    'delete_request',
+                    $this->ctrl->getLinkTarget($this->parent_obj, xdglRequestGUI::CMD_DELETE_REQUEST)
+                );
                 break;
             case xdglRequest::STATUS_REFUSED:
                 break;
@@ -157,26 +193,24 @@ class xdglRequestTableGUI extends ilTable2GUI
     {
         // Status
         $te = new ilMultiSelectInputGUI($this->pl->txt('filter_status'), 'status');
-        $te->setOptions(array(
-            xdglRequest::STATUS_NEW => $this->pl->txt('request_status_' . xdglRequest::STATUS_NEW),
-            xdglRequest::STATUS_IN_PROGRRESS => $this->pl->txt('request_status_' . xdglRequest::STATUS_IN_PROGRRESS),
-            xdglRequest::STATUS_REFUSED => $this->pl->txt('request_status_' . xdglRequest::STATUS_REFUSED),
-            xdglRequest::STATUS_RELEASED => $this->pl->txt('request_status_' . xdglRequest::STATUS_RELEASED),
-        ));
+        $te->setOptions([xdglRequest::STATUS_NEW => $this->pl->txt('request_status_' . xdglRequest::STATUS_NEW), xdglRequest::STATUS_IN_PROGRRESS => $this->pl->txt('request_status_' . xdglRequest::STATUS_IN_PROGRRESS), xdglRequest::STATUS_REFUSED => $this->pl->txt('request_status_' . xdglRequest::STATUS_REFUSED), xdglRequest::STATUS_RELEASED => $this->pl->txt('request_status_' . xdglRequest::STATUS_RELEASED)]);
         $this->addAndReadFilterItem($te);
 
         // Library
         if (ilObjDigiLitAccess::showAllLibraries()) {
             $te = new ilMultiSelectInputGUI($this->pl->txt('filter_library'), 'xdgl_library_id');
-            $te->setOptions(xdglLibrary::where(array('active' => true))->getArray('id', 'title'));
+            $te->setOptions(xdglLibrary::where(['active' => true])->getArray('id', 'title'));
             $this->addAndReadFilterItem($te);
         }
         global $ilUser;
         $te = new ilMultiSelectInputGUI($this->pl->txt('filter_librarian'), 'xdgl_librarian_id');
         xdglLibrary::getLibraryIdsForUser($ilUser);
         $lib_id = ilObjDigiLitAccess::showAllLibraries() ? null : xdglLibrary::getLibraryIdsForUser($ilUser);
-        $libs = xdglLibrarian::getAssignedLibrariansForLibrary($lib_id, $ilUser->getId(),
-            ilObjDigiLitAccess::showAllLibraries());
+        $libs = xdglLibrarian::getAssignedLibrariansForLibrary(
+            $lib_id,
+            $ilUser->getId(),
+            ilObjDigiLitAccess::showAllLibraries()
+        );
         $libs[xdglRequest::LIBRARIAN_ID_NONE] = $this->pl->txt('filter_none');
         $libs[xdglRequest::LIBRARIAN_ID_MINE] = $this->pl->txt('filter_mine');
         ksort($libs);
@@ -189,7 +223,7 @@ class xdglRequestTableGUI extends ilTable2GUI
 
         // number of usages
         $select = new ilSelectInputGUI($this->pl->txt('number_of_usages'), 'number_of_usages');
-        $select->setOptions(array('0-5' => '0-5', '5-10' => '5-10', '10-15' => '10-15', '15-20' => '15-20'));
+        $select->setOptions(['0-5' => '0-5', '5-10' => '5-10', '10-15' => '10-15', '15-20' => '15-20']);
         $this->addAndReadFilterItem($select);
     }
 
@@ -206,7 +240,7 @@ class xdglRequestTableGUI extends ilTable2GUI
                 switch ($field) {
                     case 'xdgl_library_id':
                         $field = 'xdgl_library.id';
-                        $xdglRequestList->where(array($field => $value));
+                        $xdglRequestList->where([$field => $value]);
                         break;
                     case 'ext_id':
                         $h = new arHaving();
@@ -217,10 +251,10 @@ class xdglRequestTableGUI extends ilTable2GUI
                         break;
                     case 'xdgl_librarian_id':
                         $key = array_keys($value, xdglRequest::LIBRARIAN_ID_MINE);
-                        if (count($key)) {
+                        if ($key !== []) {
                             $value[$key[0]] = $usr_id;
                         }
-                        $xdglRequestList->where(array('librarian_id' => $value));
+                        $xdglRequestList->where(['librarian_id' => $value]);
                         break;
                     case 'number_of_usages':
                         $start_between = substr($value, 0, strpos($value, '-'));
@@ -240,14 +274,14 @@ class xdglRequestTableGUI extends ilTable2GUI
 
                         break;
                     default:
-                        $xdglRequestList->where(array($field => $value));
+                        $xdglRequestList->where([$field => $value]);
                         break;
                 }
             }
         }
     }
 
-    public function parseData()
+    public function parseData(): void
     {
         global $ilUser;
         $usr_id = $ilUser->getId();
@@ -259,17 +293,14 @@ class xdglRequestTableGUI extends ilTable2GUI
         $xdglRequestList = xdglRequest::getCollection();
         $xdglRequestList->orderBy($this->getOrderField(), $this->getOrderDirection());
         //$xdglRequestList->where(array('digi_lit_object_id' => 0), '>');
-        $xdglRequestList->where(array('status' => 0), '>');
-        $xdglRequestList->leftjoin('usr_data', 'requester_usr_id', 'usr_id', array('email'));
-        $xdglRequestList->leftjoin(xdglLibrary::TABLE_NAME, 'library_id', 'id', array('id', 'title'));
-        $xdglRequestList->leftjoin(xdglLibrarian::TABLE_NAME, 'librarian_id', 'usr_id', array('usr_id', 'library_id'));
-        $xdglRequestList->leftjoin('usr_data', 'librarian_id', 'usr_id', array('email'));
-        $xdglRequestList->leftjoin(xdglRequestUsage::TABLE_NAME, 'id', 'request_id', array('crs_ref_id'), '=');
-        $xdglRequestList->leftjoin('object_reference', xdglRequestUsage::TABLE_NAME . '.crs_ref_id', 'ref_id', array(
-            'ref_id',
-            'obj_id'
-        ), '=', true);
-        $xdglRequestList->leftjoin('object_data', 'object_reference.obj_id', 'obj_id', array('title'), '=', true);
+        $xdglRequestList->where(['status' => 0], '>');
+        $xdglRequestList->leftjoin('usr_data', 'requester_usr_id', 'usr_id', ['email']);
+        $xdglRequestList->leftjoin(xdglLibrary::TABLE_NAME, 'library_id', 'id', ['id', 'title']);
+        $xdglRequestList->leftjoin(xdglLibrarian::TABLE_NAME, 'librarian_id', 'usr_id', ['usr_id', 'library_id']);
+        $xdglRequestList->leftjoin('usr_data', 'librarian_id', 'usr_id', ['email']);
+        $xdglRequestList->leftjoin(xdglRequestUsage::TABLE_NAME, 'id', 'request_id', ['crs_ref_id'], '=');
+        $xdglRequestList->leftjoin('object_reference', xdglRequestUsage::TABLE_NAME . '.crs_ref_id', 'ref_id', ['ref_id', 'obj_id'], '=', true);
+        $xdglRequestList->leftjoin('object_data', 'object_reference.obj_id', 'obj_id', ['title'], '=', true);
 
         // Ext_ID
         $sel = new arSelect();
@@ -295,7 +326,7 @@ class xdglRequestTableGUI extends ilTable2GUI
 
         if (!ilObjDigiLitAccess::showAllLibraries()) {
             $lib_ids = xdglLibrary::getLibraryIdsForUser($ilUser);
-            $xdglRequestList->where(array(xdglLibrary::TABLE_NAME . '.id' => $lib_ids));
+            $xdglRequestList->where([xdglLibrary::TABLE_NAME . '.id' => $lib_ids]);
         }
 
         $this->filterResults($usr_id, $xdglRequestList);
@@ -339,5 +370,3 @@ class xdglRequestTableGUI extends ilTable2GUI
     //		$this->ctrl->setParameter($this->parent_obj, $this->getNavParameter(), $this->nav_value);
     //	}
 }
-
-

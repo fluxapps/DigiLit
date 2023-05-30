@@ -8,29 +8,23 @@
  */
 class xdglLibraryFormGUI extends ilPropertyFormGUI
 {
-
-    const F_TITLE = 'title';
-    const F_DESCRIPTION = 'description';
-    const F_EMAIL = 'email';
-    const F_LIBRARIAN_COUNT = 'librarian_count';
-    const F_REQUEST_COUNT = 'request_count';
-    const F_ACTIVE = 'active';
+    public bool $is_new;
     /**
-     * @var xdglLibrary
+     * @var bool|mixed
      */
-    protected $library;
+    public $view;
+    public const F_TITLE = 'title';
+    public const F_DESCRIPTION = 'description';
+    public const F_EMAIL = 'email';
+    public const F_LIBRARIAN_COUNT = 'librarian_count';
+    public const F_REQUEST_COUNT = 'request_count';
+    public const F_ACTIVE = 'active';
+    protected \xdglLibrary $library;
     /**
      * @var xdglLibraryGUI
      */
     protected $parent_gui;
-    /**
-     * @var ilCtrl
-     */
-    protected $ctrl;
-    /**
-     * @var ilDigiLitPlugin
-     */
-    protected $pl;
+    protected \ilDigiLitPlugin $pl;
 
     /**
      * @param xdglLibraryGUI $parent_gui
@@ -106,16 +100,9 @@ class xdglLibraryFormGUI extends ilPropertyFormGUI
         $this->addItem($cb);
     }
 
-    public function fillForm()
+    public function fillForm(): void
     {
-        $array = array(
-            self::F_TITLE => $this->library->getTitle(),
-            self::F_DESCRIPTION => $this->library->getDescription(),
-            self::F_EMAIL => $this->library->getEmail(),
-            self::F_REQUEST_COUNT => $this->library->getRequestCount(),
-            self::F_LIBRARIAN_COUNT => $this->library->getLibrarianCount(),
-            self::F_ACTIVE => $this->library->isActive(),
-        );
+        $array = [self::F_TITLE => $this->library->getTitle(), self::F_DESCRIPTION => $this->library->getDescription(), self::F_EMAIL => $this->library->getEmail(), self::F_REQUEST_COUNT => $this->library->getRequestCount(), self::F_LIBRARIAN_COUNT => $this->library->getLibrarianCount(), self::F_ACTIVE => $this->library->isActive()];
 
         $this->setValuesByArray($array);
     }
@@ -125,7 +112,7 @@ class xdglLibraryFormGUI extends ilPropertyFormGUI
      *
      * @return bool
      */
-    public function fillObject()
+    public function fillObject(): bool
     {
         if (!$this->checkInput()) {
             return false;
@@ -170,5 +157,3 @@ class xdglLibraryFormGUI extends ilPropertyFormGUI
         $this->addCommandButton(xdglLibraryGUI::CMD_CANCEL, $this->txt('cancel'));
     }
 }
-
-

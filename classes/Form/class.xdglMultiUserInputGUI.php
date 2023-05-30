@@ -8,13 +8,20 @@
  */
 class xdglMultiUserInputGUI extends ilMultiSelectInputGUI
 {
-
     /**
-     * @var string
+     * @var \ilDigiLitPlugin
+     */
+    public $pl;
+    /**
+     * @var srDefaultAccessChecker|mixed
+     */
+    public $access_checker;
+    /**
+     * @var int
      */
     protected $width;
     /**
-     * @var string
+     * @var int
      */
     protected $height;
     /**
@@ -37,29 +44,33 @@ class xdglMultiUserInputGUI extends ilMultiSelectInputGUI
     /**
      * @return string
      */
-    protected function getValueAsJson()
+    protected function getValueAsJson(): string
     {
         global $ilDB;
-        $query = "SELECT obj_id, title FROM object_data WHERE type = 'usr' AND " . $ilDB->in("obj_id",
-                $this->getValue(), false, "integer");
+        $query = "SELECT obj_id, title FROM object_data WHERE type = 'usr' AND " . $ilDB->in(
+            "obj_id",
+            $this->getValue(),
+            false,
+            "integer"
+        );
         $res = $ilDB->query($query);
-        $result = array();
+        $result = [];
         while ($row = $ilDB->fetchAssoc($res)) {
-            $result[] = array("id" => $row['obj_id'], "text" => $row['title']);
+            $result[] = ["id" => $row['obj_id'], "text" => $row['title']];
         }
 
-        return json_encode($result);
+        return json_encode($result, JSON_THROW_ON_ERROR);
     }
 
     /**
      * @param string $title
      * @param string $post_var
      */
-    public function __construct($title, $post_var)
+    public function __construct(string $title, string $post_var)
     {
         global $tpl, $ilUser, $lng;
         if (substr($post_var, -2) != '[]') {
-            $post_var = $post_var . '[]';
+            $post_var .= '[]';
         }
         parent::__construct($title, $post_var);
 
@@ -76,7 +87,7 @@ class xdglMultiUserInputGUI extends ilMultiSelectInputGUI
     /**
      * @return bool
      */
-    public function checkInput()
+    public function checkInput(): bool
     {
         global $lng;
 
@@ -92,13 +103,13 @@ class xdglMultiUserInputGUI extends ilMultiSelectInputGUI
     /**
      * @return array
      */
-    public function getValue()
+    public function getValue(): array
     {
         $val = parent::getValue();
         if (is_array($val)) {
             return $val;
         } elseif (!$val) {
-            return array();
+            return [];
         } else {
             return explode(',', $val);
         }
@@ -109,10 +120,10 @@ class xdglMultiUserInputGUI extends ilMultiSelectInputGUI
      */
     public function getSubItems()
     {
-        return array();
+        return [];
     }
 
-    public function getContainerType()
+    public function getContainerType(): string
     {
         return 'usr';
     }
@@ -120,7 +131,7 @@ class xdglMultiUserInputGUI extends ilMultiSelectInputGUI
     /**
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $tpl = $this->getInputTemplate();
         $values = $this->getValueAsJson();
@@ -136,7 +147,7 @@ class xdglMultiUserInputGUI extends ilMultiSelectInputGUI
         $tpl->setVariable('CONTAINER_TYPE', $this->getContainerType());
         $tpl->setVariable('Class', $this->getCssClass());
 
-        if (isset($this->ajax_link)) {
+        if ($this->ajax_link !== null) {
             $tpl->setVariable('AJAX_LINK', $this->getAjaxLink());
         }
 
@@ -144,7 +155,7 @@ class xdglMultiUserInputGUI extends ilMultiSelectInputGUI
             $tpl->setVariable('ALL_DISABLED', 'disabled=\'disabled\'');
         }
 
-        if ($options) {
+        if ($options !== []) {
             foreach ($options as $option_value => $option_text) {
                 $tpl->setCurrentBlock('item');
                 if ($this->getDisabled()) {
@@ -163,20 +174,12 @@ class xdglMultiUserInputGUI extends ilMultiSelectInputGUI
         return $tpl->get();
     }
 
-    /**
-     * @param string $height
-     * @deprecated setting inline style items from the controller is bad practice. please use the setClass together with an appropriate css class.
-     *
-     */
-    public function setHeight($height)
+    public function setHeight(int $a_height): void
     {
-        $this->height = $height;
+        $this->height = $a_height;
     }
 
-    /**
-     * @return string
-     */
-    public function getHeight()
+    public function getHeight(): int
     {
         return $this->height;
     }
@@ -186,15 +189,13 @@ class xdglMultiUserInputGUI extends ilMultiSelectInputGUI
      * @deprecated setting inline style items from the controller is bad practice. please use the setClass together with an appropriate css class.
      *
      */
-    public function setWidth($width)
+    public function setWidth(int $a_width): void
     {
-        $this->width = $width;
+        $this->width = $a_width;
     }
 
-    /**
-     * @return string
-     */
-    public function getWidth()
+
+    public function getWidth(): int
     {
         return $this->width;
     }
@@ -202,7 +203,7 @@ class xdglMultiUserInputGUI extends ilMultiSelectInputGUI
     /**
      * @param string $css_class
      */
-    public function setCssClass($css_class)
+    public function setCssClass($css_class): void
     {
         $this->css_class = $css_class;
     }
@@ -218,7 +219,7 @@ class xdglMultiUserInputGUI extends ilMultiSelectInputGUI
     /**
      * @param int $minimum_input_length
      */
-    public function setMinimumInputLength($minimum_input_length)
+    public function setMinimumInputLength($minimum_input_length): void
     {
         $this->minimum_input_length = $minimum_input_length;
     }
@@ -234,7 +235,7 @@ class xdglMultiUserInputGUI extends ilMultiSelectInputGUI
     /**
      * @param string $ajax_link setting the ajax link will lead to ignoration of the 'setOptions' function as the link given will be used to get the
      */
-    public function setAjaxLink($ajax_link)
+    public function setAjaxLink($ajax_link): void
     {
         $this->ajax_link = $ajax_link;
     }
@@ -250,7 +251,7 @@ class xdglMultiUserInputGUI extends ilMultiSelectInputGUI
     /**
      * @param srDefaultAccessChecker $access_checker
      */
-    public function setAccessChecker($access_checker)
+    public function setAccessChecker($access_checker): void
     {
         $this->access_checker = $access_checker;
     }
@@ -266,7 +267,7 @@ class xdglMultiUserInputGUI extends ilMultiSelectInputGUI
     /**
      * @param ilTemplate $input_template
      */
-    public function setInputTemplate($input_template)
+    public function setInputTemplate($input_template): void
     {
         $this->input_template = $input_template;
     }
@@ -294,13 +295,13 @@ class xdglMultiUserInputGUI extends ilMultiSelectInputGUI
         }
     }
 
-    public function setValueByArray($array)
+    public function setValueByArray(array $a_values): void
     {
-        $val = $array[$this->searchPostVar()];
+        $val = $a_values[$this->searchPostVar()];
         if (is_array($val)) {
             $val;
         } elseif (!$val) {
-            $val = array();
+            $val = [];
         } else {
             $val = explode(',', $val);
         }

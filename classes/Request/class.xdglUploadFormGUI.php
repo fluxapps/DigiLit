@@ -11,28 +11,14 @@
  */
 class xdglUploadFormGUI extends ilPropertyFormGUI
 {
-
-    const F_FILE_UPLOAD = 'file_upload';
-    /**
-     * @var bool
-     */
-    protected $replace;
-    /**
-     * @var xdglRequest
-     */
-    protected $request;
+    public const F_FILE_UPLOAD = 'file_upload';
+    protected bool $replace;
+    protected \xdglRequest $request;
     /**
      * @var ilObjDigiLitGUI
      */
     protected $parent_gui;
-    /**
-     * @var ilCtrl
-     */
-    protected $ctrl;
-    /**
-     * @var ilDigiLitPlugin
-     */
-    protected $pl;
+    protected \ilDigiLitPlugin $pl;
     /**
      * @var String
      */
@@ -73,7 +59,7 @@ class xdglUploadFormGUI extends ilPropertyFormGUI
 
         // Add File-Upload
         $in_file = new ilFileInputGUI($this->pl->txt('upload_file'), self::F_FILE_UPLOAD);
-        $in_file->setSuffixes(array('pdf'));
+        $in_file->setSuffixes(['pdf']);
         $in_file->setRequired(true);
         $this->addItem($in_file);
 
@@ -99,7 +85,7 @@ class xdglUploadFormGUI extends ilPropertyFormGUI
      * @return bool
      * @throws Exception
      */
-    public function uploadFile()
+    public function uploadFile(): bool
     {
         $this->readForm();
         if ($this->request->uploadFileFromForm($this)) {
@@ -126,7 +112,7 @@ class xdglUploadFormGUI extends ilPropertyFormGUI
     /**
      * @param String $upload_name
      */
-    public function setUploadName($upload_name)
+    public function setUploadName($upload_name): void
     {
         $this->upload_name = $upload_name;
     }
@@ -142,7 +128,7 @@ class xdglUploadFormGUI extends ilPropertyFormGUI
     /**
      * @param String $upload_temp_name
      */
-    public function setUploadTempName($upload_temp_name)
+    public function setUploadTempName($upload_temp_name): void
     {
         $this->upload_temp_name = $upload_temp_name;
     }

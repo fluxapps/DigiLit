@@ -9,11 +9,10 @@ use srag\Plugins\DigiLit\Interfaces\RequestUsage\xdglRequestUsageInterface;
  */
 class xdglRequestUsage extends ActiveRecord implements xdglRequestUsageInterface
 {
-
     /**
      * @return string
      */
-    public function getConnectorContainerName()
+    public function getConnectorContainerName(): string
     {
         return self::TABLE_NAME;
     }
@@ -22,7 +21,7 @@ class xdglRequestUsage extends ActiveRecord implements xdglRequestUsageInterface
      * @return string
      * @deprecated
      */
-    public static function returnDbTableName()
+    public static function returnDbTableName(): string
     {
         return self::TABLE_NAME;
     }
@@ -73,7 +72,7 @@ class xdglRequestUsage extends ActiveRecord implements xdglRequestUsageInterface
     /**
      * @param int $id
      */
-    public function setId($id)
+    public function setId($id): void
     {
         $this->id = $id;
     }
@@ -89,7 +88,7 @@ class xdglRequestUsage extends ActiveRecord implements xdglRequestUsageInterface
     /**
      * @param int $request_id
      */
-    public function setRequestId($request_id)
+    public function setRequestId($request_id): void
     {
         $this->request_id = $request_id;
     }
@@ -105,7 +104,7 @@ class xdglRequestUsage extends ActiveRecord implements xdglRequestUsageInterface
     /**
      * @param string $crs_ref_id
      */
-    public function setCrsRefId($crs_ref_id)
+    public function setCrsRefId($crs_ref_id): void
     {
         $this->crs_ref_id = $crs_ref_id;
     }
@@ -121,7 +120,7 @@ class xdglRequestUsage extends ActiveRecord implements xdglRequestUsageInterface
     /**
      * @param int $obj_id
      */
-    public function setObjId($obj_id)
+    public function setObjId($obj_id): void
     {
         $this->obj_id = $obj_id;
     }

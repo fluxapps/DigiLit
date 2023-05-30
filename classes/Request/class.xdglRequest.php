@@ -10,42 +10,35 @@
  */
 class xdglRequest extends ActiveRecord
 {
-
-    const TABLE_NAME = 'xdgl_request';
-    const STATUS_DELETED = -1;
-    const STATUS_NEW = 1;
-    const STATUS_IN_PROGRRESS = 2;
-    const STATUS_RELEASED = 3;
-    const STATUS_REFUSED = 4;
-    const STATUS_COPY = 5;
-    const STATUS_ASSIGNED = 6;
-    const LIBRARIAN_ID_NONE = 1;
-    const LIBRARIAN_ID_MINE = 2;
-    const EXT_ID_PREFIX = '';
-    const UNKNOWN_PREFIX = 'UNKNOWN-';
+    /**
+     * @var mixed
+     */
+    public $count_of_existing;
+    public const TABLE_NAME = 'xdgl_request';
+    public const STATUS_DELETED = -1;
+    public const STATUS_NEW = 1;
+    public const STATUS_IN_PROGRRESS = 2;
+    public const STATUS_RELEASED = 3;
+    public const STATUS_REFUSED = 4;
+    public const STATUS_COPY = 5;
+    public const STATUS_ASSIGNED = 6;
+    public const LIBRARIAN_ID_NONE = 1;
+    public const LIBRARIAN_ID_MINE = 2;
+    public const EXT_ID_PREFIX = '';
+    public const UNKNOWN_PREFIX = 'UNKNOWN-';
     /**
      * @var array
      */
-    protected static $countable_status = array(
-        self::STATUS_NEW,
-        self::STATUS_IN_PROGRRESS,
-        self::STATUS_RELEASED,
-    );
+    protected static $countable_status = [self::STATUS_NEW, self::STATUS_IN_PROGRRESS, self::STATUS_RELEASED];
     /**
      * @var array
      */
-    protected static $status_to_string_map = array(
-        self::STATUS_NEW => 'request_status_1',
-        self::STATUS_IN_PROGRRESS => 'request_status_2',
-        self::STATUS_RELEASED => 'request_status_3',
-        self::STATUS_REFUSED => 'request_status_4',
-        self::STATUS_ASSIGNED => 'request_status_6',
-    );
+    protected static $status_to_string_map = [self::STATUS_NEW => 'request_status_1', self::STATUS_IN_PROGRRESS => 'request_status_2', self::STATUS_RELEASED => 'request_status_3', self::STATUS_REFUSED => 'request_status_4', self::STATUS_ASSIGNED => 'request_status_6'];
 
     /**
      * @return string
      */
-    public function getConnectorContainerName()
+    public function getConnectorContainerName(): string
     {
         return self::TABLE_NAME;
     }
@@ -54,7 +47,7 @@ class xdglRequest extends ActiveRecord
      * @return string
      * @deprecated
      */
-    public static function returnDbTableName()
+    public static function returnDbTableName(): string
     {
         return self::TABLE_NAME;
     }
@@ -281,12 +274,12 @@ class xdglRequest extends ActiveRecord
      */
     protected $ext_id = '';
 
-    public function afterObjectLoad()
+    public function afterObjectLoad(): void
     {
         if (xdglConfig::getConfigValue(xdglConfig::F_USE_REGEX)) {
             preg_match(xdglConfig::getConfigValue(xdglConfig::F_REGEX), $this->getCourseNumber(), $matches);
             $form_id = sprintf('%05d', $this->getId());
-            if ($matches[1]) {
+            if ($matches[1] !== '' && $matches[1] !== '0') {
                 $this->setExtId(self::EXT_ID_PREFIX . $matches[1] . '-' . $form_id);
             } else {
                 $this->setExtId(self::EXT_ID_PREFIX . self::UNKNOWN_PREFIX . $form_id);
@@ -300,7 +293,7 @@ class xdglRequest extends ActiveRecord
      * @param bool $prevent_last_change
      * @param bool $update_title
      */
-    public function update($prevent_last_change = false, $update_title = true)
+    public function update($prevent_last_change = false, $update_title = true): void
     {
         if ($this->getLibrarianId() === null) {
             $this->setLibrarianId(self::LIBRARIAN_ID_NONE);
@@ -316,7 +309,7 @@ class xdglRequest extends ActiveRecord
         }
     }
 
-    public function create()
+    public function create(): void
     {
         global $ilUser;
         if ($this->getLibrarianId() === null) {
@@ -334,7 +327,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param xdglLibrarian $xdglLibrarian
      */
-    public function assignToLibrarian(xdglLibrarian $xdglLibrarian)
+    public function assignToLibrarian(xdglLibrarian $xdglLibrarian): void
     {
         $this->setLibrarianId($xdglLibrarian->getUsrId());
         $this->setLibraryId($xdglLibrarian->getLibraryId());
@@ -346,7 +339,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param xdglLibrary $xdglLibrary
      */
-    public function assignToLibrary(xdglLibrary $xdglLibrary)
+    public function assignToLibrary(xdglLibrary $xdglLibrary): void
     {
         $this->setLibraryId($xdglLibrary->getId());
         $this->setLibrarianId(self::LIBRARIAN_ID_NONE);
@@ -356,36 +349,25 @@ class xdglRequest extends ActiveRecord
     }
 
     /**
-     * @param int   $primary_key
-     * @param array $add_constructor_args
-     *
-     * @return xdglRequest
-     */
-    public static function find($primary_key, array $add_constructor_args = array())
-    {
-        return parent::find($primary_key, $add_constructor_args);
-    }
-
-    /**
      * @return int
      */
     public function getAmoutOfDigiLitsInCourse()
     {
-        if (isset($this->count_of_existing)) {
+        if (property_exists($this, 'count_of_existing') && $this->count_of_existing !== null) {
             return $this->count_of_existing;
         }
         $count = 0;
         if ($this->getCrsRefId()) {
-            $this->count_of_existing = $count = $this->getAmoutOfDigiLitsInContainer($count, $this->getCrsRefId());
+            $this->count_of_existing = $count = static::getAmoutOfDigiLitsInContainer($count, $this->getCrsRefId());
         }
-    
+
         return $count;
     }
 
     /**
      * @return bool
      */
-    public function doesCount()
+    public function doesCount(): bool
     {
         return in_array($this->getStatus(), self::$countable_status);
     }
@@ -411,7 +393,7 @@ class xdglRequest extends ActiveRecord
             }
         }
 
-        foreach ($tree->getChildsByTypeFilter($ref_id, array('fold', 'grp')) as $sub) {
+        foreach ($tree->getChildsByTypeFilter($ref_id, ['fold', 'grp']) as $sub) {
             $count = self::getAmoutOfDigiLitsInContainer($count, $sub['ref_id']);
         }
 
@@ -444,15 +426,14 @@ class xdglRequest extends ActiveRecord
     public function getFilePath()
     {
         $xdgl = ilDigiLitPlugin::PLUGIN_ID;
-        $path = ilUtil::getDataDir() . DIRECTORY_SEPARATOR . $xdgl . DIRECTORY_SEPARATOR . self::createPathFromId($this->getId());
 
-        return $path;
+        return ilUtil::getDataDir() . DIRECTORY_SEPARATOR . $xdgl . DIRECTORY_SEPARATOR . self::createPathFromId($this->getId());
     }
 
     /**
      * @return bool
      */
-    public function dirExists()
+    public function dirExists(): bool
     {
         return is_dir($this->getFilePath());
     }
@@ -460,7 +441,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @return bool
      */
-    public function fileExists()
+    public function fileExists(): bool
     {
         $filename = $this->getAbsoluteFilePath();
 
@@ -474,7 +455,7 @@ class xdglRequest extends ActiveRecord
     {
         $fileExists = $this->fileExists();
         $status = $this->getStatus();
-        if ($fileExists and $status == self::STATUS_RELEASED) {
+        if ($fileExists && $status == self::STATUS_RELEASED) {
             header('Content-Type: application/pdf');
 
             return ilUtil::deliverFile($this->getAbsoluteFilePath(), $this->getTitle() . '.pdf');
@@ -487,7 +468,7 @@ class xdglRequest extends ActiveRecord
      * @return bool
      * @throws Exception
      */
-    public function createDir()
+    public function createDir(): bool
     {
         if (!$this->dirExists()) {
             if (!ilUtil::makeDirParents($this->getFilePath())) {
@@ -509,8 +490,11 @@ class xdglRequest extends ActiveRecord
     {
         $this->createDir();
 
-        if (ilUtil::moveUploadedFile($xdglUploadFormGUI->getUploadTempName(), $xdglUploadFormGUI->getUploadTempName(),
-            $this->getAbsoluteFilePath())) {
+        if (ilUtil::moveUploadedFile(
+            $xdglUploadFormGUI->getUploadTempName(),
+            $xdglUploadFormGUI->getUploadTempName(),
+            $this->getAbsoluteFilePath()
+        )) {
             global $ilUser;
             $this->setLibrarianId($ilUser->getId());
             $this->setStatus(self::STATUS_RELEASED);
@@ -568,7 +552,7 @@ class xdglRequest extends ActiveRecord
             case 'date_last_status_change':
             case 'create_date':
             case 'last_change':
-                return date(DATE_ISO8601, $this->{$field_name});
+                return date(DATE_ATOM, $this->{$field_name});
                 break;
         }
     }
@@ -585,20 +569,20 @@ class xdglRequest extends ActiveRecord
      */
     public static function createPathFromId($id)
     {
-        $path = array();
+        $path = [];
         $found = false;
         $id = (int) $id;
         for ($i = 2; $i >= 0; $i--) {
-            $factor = pow(100, $i);
-            if (($tmp = (int) ($id / $factor)) or $found) {
+            $factor = 100 ** $i;
+            if (($tmp = (int) ($id / $factor)) || $found) {
                 $path[] = $tmp;
-                $id = $id % $factor;
+                $id %= $factor;
                 $found = true;
             }
         }
 
         $path_string = '';
-        if (count($path)) {
+        if ($path !== []) {
             $path_string = implode(DIRECTORY_SEPARATOR, $path);
         }
 
@@ -642,7 +626,7 @@ class xdglRequest extends ActiveRecord
     public static function boolTextRepresentation($value, $appendix = '')
     {
         $value = (int) $value;
-        if ($appendix) {
+        if ($appendix !== '' && $appendix !== '0') {
             $appendix = '_' . $appendix;
         }
 
@@ -661,7 +645,7 @@ class xdglRequest extends ActiveRecord
      *
      * @deprecated
      */
-    public static function setDigilitStatus($request_id, $status)
+    public static function setDigilitStatus($request_id, $status): void
     {
         $request = new self($request_id);
         $request->setStatus($status);
@@ -675,14 +659,18 @@ class xdglRequest extends ActiveRecord
      *
      * @return array
      */
-    public static function findDistinctRequestsByTitleAndAuthor($search_title, $search_author, $limit)
+    public static function findDistinctRequestsByTitleAndAuthor($search_title, $search_author, $limit): array
     {
         global $ilDB;
         $query = "SELECT DISTINCT id, status, author, title, book, publisher, location, publishing_year, pages FROM ilias." . xdglRequest::TABLE_NAME
-            . " where title LIKE " . $ilDB->quote("%" . $search_title . "%",
-                "text") . " AND author LIKE " . $ilDB->quote("%" . $search_author
-                . "%", "text") . " AND status != -1 GROUP BY author, title, book LIMIT " . $ilDB->quote($limit,
-                "integer");
+            . " where title LIKE " . $ilDB->quote(
+                "%" . $search_title . "%",
+                "text"
+            ) . " AND author LIKE " . $ilDB->quote("%" . $search_author
+                . "%", "text") . " AND status != -1 GROUP BY author, title, book LIMIT " . $ilDB->quote(
+                    $limit,
+                    "integer"
+                );
         $set = $ilDB->query($query);
         $requests = [];
         while ($rec = $ilDB->fetchAssoc($set)) {
@@ -704,7 +692,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param string $author
      */
-    public function setAuthor($author)
+    public function setAuthor($author): void
     {
         $this->author = $author;
     }
@@ -720,7 +708,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param int $course_number
      */
-    public function setCourseNumber($course_number)
+    public function setCourseNumber($course_number): void
     {
         $this->course_number = $course_number;
     }
@@ -736,7 +724,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param int $create_date_unix_timestamp
      */
-    public function setCreateDate($create_date_unix_timestamp)
+    public function setCreateDate($create_date_unix_timestamp): void
     {
         $this->create_date = $create_date_unix_timestamp;
     }
@@ -752,7 +740,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param int $edition_relevant
      */
-    public function setEditionRelevant($edition_relevant)
+    public function setEditionRelevant($edition_relevant): void
     {
         $this->edition_relevant = $edition_relevant;
     }
@@ -768,7 +756,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param string $editor
      */
-    public function setEditor($editor)
+    public function setEditor($editor): void
     {
         $this->editor = $editor;
     }
@@ -784,7 +772,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param string $issn
      */
-    public function setIssn($issn)
+    public function setIssn($issn): void
     {
         $this->issn = $issn;
     }
@@ -800,7 +788,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param string $location
      */
-    public function setLocation($location)
+    public function setLocation($location): void
     {
         $this->location = $location;
     }
@@ -816,7 +804,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param string $pages
      */
-    public function setPages($pages)
+    public function setPages($pages): void
     {
         $this->pages = $pages;
     }
@@ -832,7 +820,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param string $publisher
      */
-    public function setPublisher($publisher)
+    public function setPublisher($publisher): void
     {
         $this->publisher = $publisher;
     }
@@ -848,7 +836,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param int $publishing_year
      */
-    public function setPublishingYear($publishing_year)
+    public function setPublishingYear($publishing_year): void
     {
         $this->publishing_year = $publishing_year;
     }
@@ -864,7 +852,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param int $id
      */
-    public function setId($id)
+    public function setId($id): void
     {
         $this->id = $id;
     }
@@ -880,7 +868,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param int $status
      */
-    public function setStatus($status)
+    public function setStatus($status): void
     {
         $this->status = $status;
         $this->setDateLastStatusChange(time());
@@ -897,7 +885,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param string $title
      */
-    public function setTitle($title)
+    public function setTitle($title): void
     {
         $this->title = $title;
     }
@@ -913,7 +901,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param string $book
      */
-    public function setBook($book)
+    public function setBook($book): void
     {
         $this->book = $book;
     }
@@ -929,7 +917,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param int $volume_year
      */
-    public function setVolume($volume_year)
+    public function setVolume($volume_year): void
     {
         $this->volume = $volume_year;
     }
@@ -945,7 +933,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param String $date_last_status_change_unix_timestamp
      */
-    public function setDateLastStatusChange($date_last_status_change_unix_timestamp)
+    public function setDateLastStatusChange($date_last_status_change_unix_timestamp): void
     {
         $this->date_last_status_change = $date_last_status_change_unix_timestamp;
     }
@@ -961,7 +949,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param int $version
      */
-    public function setVersion($version)
+    public function setVersion($version): void
     {
         $this->version = $version;
     }
@@ -977,7 +965,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param string $last_modified_by_usr_id
      */
-    public function setLastModifiedByUsrId($last_modified_by_usr_id)
+    public function setLastModifiedByUsrId($last_modified_by_usr_id): void
     {
         $this->last_modified_by_usr_id = $last_modified_by_usr_id;
     }
@@ -993,7 +981,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param string $requester_usr_id
      */
-    public function setRequesterUsrId($requester_usr_id)
+    public function setRequesterUsrId($requester_usr_id): void
     {
         $this->requester_usr_id = $requester_usr_id;
     }
@@ -1009,7 +997,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param string $rejection_reason
      */
-    public function setRejectionReason($rejection_reason)
+    public function setRejectionReason($rejection_reason): void
     {
         $this->rejection_reason = $rejection_reason;
     }
@@ -1025,7 +1013,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param string $copy_id
      */
-    public function setCopyId($copy_id)
+    public function setCopyId($copy_id): void
     {
         $this->copy_id = $copy_id;
     }
@@ -1049,7 +1037,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param int $library_id
      */
-    public function setLibraryId($library_id)
+    public function setLibraryId($library_id): void
     {
         $this->library_id = $library_id;
     }
@@ -1065,7 +1053,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param int $librarian_id
      */
-    public function setLibrarianId($librarian_id)
+    public function setLibrarianId($librarian_id): void
     {
         $this->librarian_id = $librarian_id;
     }
@@ -1081,7 +1069,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param string $notice
      */
-    public function setNotice($notice)
+    public function setNotice($notice): void
     {
         $this->notice = $notice;
     }
@@ -1097,7 +1085,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param string $internal_notice
      */
-    public function setInternalNotice($internal_notice)
+    public function setInternalNotice($internal_notice): void
     {
         $this->internal_notice = $internal_notice;
     }
@@ -1113,7 +1101,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param string $ext_id
      */
-    public function setExtId($ext_id)
+    public function setExtId($ext_id): void
     {
         $this->ext_id = $ext_id;
     }
@@ -1129,7 +1117,7 @@ class xdglRequest extends ActiveRecord
     /**
      * @param int $last_change
      */
-    public function setLastChange($last_change)
+    public function setLastChange($last_change): void
     {
         $this->last_change = $last_change;
     }
