@@ -167,11 +167,11 @@ class xdglNotification extends ilMailNotification
                     $this->getXdglRequest()->getId()
                 );
 
-            //				return urldecode(ilUtil::_getHttpPath() . '/' . $ilCtrl->getLinkTargetByClass(array(
-            //						ilUIPluginRouterGUI::class,
-            //						xdglRequestGUI::class
-            //					), xdglRequestGUI::CMD_VIEW, '', false, false));
-            // no break
+                //				return urldecode(ilUtil::_getHttpPath() . '/' . $ilCtrl->getLinkTargetByClass(array(
+                //						ilUIPluginRouterGUI::class,
+                //						xdglRequestGUI::class
+                //					), xdglRequestGUI::CMD_VIEW, '', false, false));
+                // no break
             case self::R_TITLE:
                 return $this->getXdglRequest()->getTitle();
             case self::R_AUTHOR:
@@ -317,18 +317,6 @@ class xdglNotification extends ilMailNotification
         return $mail->Send();
     }
 
-    /**
-     * @return int
-     */
-    public function getType(): int
-    {
-        return $this->type;
-    }
-
-    public function setType(int $a_type): void
-    {
-        $this->type = $a_type;
-    }
 
     /**
      * @return xdglRequest

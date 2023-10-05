@@ -100,7 +100,8 @@ class ilObjDigiLitListGUI extends ilObjectPluginListGUI
     {
         $ilObjDigiLitFacadeFactory = new ilObjDigiLitFacadeFactory();
         $request_usage = $ilObjDigiLitFacadeFactory->requestUsageFactory()->getInstanceByObjectId($this->obj_id);
-        $request = xdglRequest::find($request_usage->getRequestId());
+        $request_id = $request_usage->getRequestId();
+        $request = xdglRequest::find($request_id);
         $this->title = $request->getTitle() . ' / ' . $request->getAuthor();
         parent::setTitle($this->title);
         $this->default_command = [];
@@ -259,7 +260,7 @@ class ilObjDigiLitListGUI extends ilObjectPluginListGUI
             case xdglRequest::STATUS_NEW:
             case xdglRequest::STATUS_IN_PROGRRESS:
             case xdglRequest::STATUS_REFUSED:
-                $this->default_command = false;
+                $this->default_command = [];
                 break;
             case xdglRequest::STATUS_RELEASED:
                 $file = $request->getAbsoluteFilePath();
@@ -270,7 +271,7 @@ class ilObjDigiLitListGUI extends ilObjectPluginListGUI
                         'frame' => '_top',
                     );
                 } else {
-                    $this->default_command = false;
+                    $this->default_command = [];
                 }
 
                 break;

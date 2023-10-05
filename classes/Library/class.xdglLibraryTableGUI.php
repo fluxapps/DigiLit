@@ -52,13 +52,8 @@ class xdglLibraryTableGUI extends ilTable2GUI
         $this->parseData();
         $ilToolbar->addButton(
             $this->pl->txt('library_add'),
-            $this->ctrl->getLinkTarget($this->parent_obj, xdglLibraryGUI::CMD_ADD),
-            '',
-            '',
-            '',
-            'emphatize'
+            $this->ctrl->getLinkTarget($this->parent_obj, xdglLibraryGUI::CMD_ADD)
         );
-        //		$this->addHeaderCommand($this->ctrl->getLinkTarget($this->parent_obj, xdglLibraryGUI::CMD_ADD), $this->pl->txt('library_add'));
     }
 
     /**

@@ -22,21 +22,24 @@ class ilDigiLitPlugin extends ilRepositoryObjectPlugin
 
     public const PLUGIN_ID = 'xdgl';
     public const PLUGIN_NAME = 'DigiLit';
-    /**
-     * @var ilDigiLitPlugin
-     */
-    protected static $cache;
 
-    /**
-     * @return ilDigiLitPlugin
-     */
-    public static function getInstance()
+    private static ?ilDigiLitPlugin $instance = null;
+
+    public static function getInstance(): self
     {
-        if (!isset(self::$cache)) {
-            self::$cache = new self();
+        if (!self::$instance instanceof self) {
+            global $DIC;
+            // ILIAS 8
+            if (isset($DIC['component.factory']) && $DIC['component.factory'] instanceof ilComponentFactory) {
+                $component_factory = $DIC['component.factory'];
+                self::$instance = $component_factory->getPlugin(self::PLUGIN_ID);
+            } // ILIAS 7
+            else {
+                self::$instance = new self();
+            }
         }
 
-        return self::$cache;
+        return self::$instance;
     }
 
     /**

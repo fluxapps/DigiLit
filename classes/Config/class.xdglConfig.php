@@ -85,11 +85,12 @@ class xdglConfig extends ActiveRecord
     {
         if (!self::$cache_loaded[$name]) {
             $obj = new self($name);
-            if ($_SERVER['REMOTE_ADDR'] == '212.41.220.231') {
-                //				var_dump(json_decode($obj->getValue())); // FSX
+            try {
+                self::$cache[$name] = json_decode($obj->getValue(), null, 512, JSON_THROW_ON_ERROR);
+                self::$cache_loaded[$name] = true;
+            } catch (Throwable $e) {
+                self::$cache[$name] = null;
             }
-            self::$cache[$name] = json_decode($obj->getValue(), null, 512, JSON_THROW_ON_ERROR);
-            self::$cache_loaded[$name] = true;
         }
 
         return self::$cache[$name];

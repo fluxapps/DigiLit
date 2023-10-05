@@ -96,7 +96,7 @@ class xdglConfigFormGUI extends ilPropertyFormGUI
         //		$this->addItem($te);
 
         // Max Requests reached info
-        $info = new ilTextareaInputGUI($this->txt(xdglConfig::F_MAX_REQ_TEXT), xdglConfig::F_MAX_REQ_TEXT);
+        $info = new ilTextAreaInputGUI($this->txt(xdglConfig::F_MAX_REQ_TEXT), xdglConfig::F_MAX_REQ_TEXT);
         $info->setUseRte(true);
         $info->setRteTags(['a', 'p', 'ul', 'li', 'ol']);
         $info->setCols(self::A_COLS);
@@ -108,7 +108,7 @@ class xdglConfigFormGUI extends ilPropertyFormGUI
         $this->addItem($h);
 
         // Mail new Request
-        $te = new ilTextareaInputGUI($this->txt(xdglConfig::F_MAIL_NEW_REQUEST), xdglConfig::F_MAIL_NEW_REQUEST);
+        $te = new ilTextAreaInputGUI($this->txt(xdglConfig::F_MAIL_NEW_REQUEST), xdglConfig::F_MAIL_NEW_REQUEST);
         $te->setCols(self::A_COLS);
         $te->setRows(self::A_ROWS);
         $pl = xdglNotification::getPlaceHoldersForType(xdglNotification::TYPE_NEW_REQUEST);
@@ -116,7 +116,7 @@ class xdglConfigFormGUI extends ilPropertyFormGUI
         $this->addItem($te);
 
         // Mail Rejected
-        $te = new ilTextareaInputGUI($this->txt(xdglConfig::F_MAIL_REJECTED), xdglConfig::F_MAIL_REJECTED);
+        $te = new ilTextAreaInputGUI($this->txt(xdglConfig::F_MAIL_REJECTED), xdglConfig::F_MAIL_REJECTED);
         $te->setCols(self::A_COLS);
         $te->setRows(self::A_ROWS);
         $pl = xdglNotification::getPlaceHoldersForType(xdglNotification::TYPE_REJECTED);
@@ -124,7 +124,7 @@ class xdglConfigFormGUI extends ilPropertyFormGUI
         $this->addItem($te);
 
         // Mail Uploaded
-        $te = new ilTextareaInputGUI($this->txt(xdglConfig::F_MAIL_UPLOADED), xdglConfig::F_MAIL_UPLOADED);
+        $te = new ilTextAreaInputGUI($this->txt(xdglConfig::F_MAIL_UPLOADED), xdglConfig::F_MAIL_UPLOADED);
         $te->setCols(self::A_COLS);
         $te->setRows(self::A_ROWS);
         $pl = xdglNotification::getPlaceHoldersForType(xdglNotification::TYPE_ULOADED);
@@ -132,7 +132,7 @@ class xdglConfigFormGUI extends ilPropertyFormGUI
         $this->addItem($te);
 
         // Mail Uploaded
-        $te = new ilTextareaInputGUI($this->txt(xdglConfig::F_MAIL_MOVED), xdglConfig::F_MAIL_MOVED);
+        $te = new ilTextAreaInputGUI($this->txt(xdglConfig::F_MAIL_MOVED), xdglConfig::F_MAIL_MOVED);
         $te->setCols(self::A_COLS);
         $te->setRows(self::A_ROWS);
         $pl = xdglNotification::getPlaceHoldersForType(xdglNotification::TYPE_MOVED);
@@ -144,7 +144,7 @@ class xdglConfigFormGUI extends ilPropertyFormGUI
         $this->addItem($h);
 
         // EULA
-        $te = new ilTextareaInputGUI($this->txt(xdglConfig::F_EULA_TEXT), xdglConfig::F_EULA_TEXT);
+        $te = new ilTextAreaInputGUI($this->txt(xdglConfig::F_EULA_TEXT), xdglConfig::F_EULA_TEXT);
         $te->setUseRte(true);
         $te->setRteTags(['a', 'p', 'ul', 'li', 'ol']);
         $te->setCols(self::A_COLS);

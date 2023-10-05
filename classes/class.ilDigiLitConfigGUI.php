@@ -8,6 +8,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
  * @author  Fabian Schmid <fs@studer-raimann.ch>
  *
  * @version 1.0.00
+ * @ilCtrl_isCalledBy ilDigiLitConfigGUI: ilObjComponentSettingsGUI
  */
 class ilDigiLitConfigGUI extends ilPluginConfigGUI
 {

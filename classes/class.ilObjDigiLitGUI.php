@@ -57,6 +57,7 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
     public const CMD_INFO_SCREEN = 'infoScreen';
     public const TAB_PERMISSIONS = 'permissions';
     public const TAB_INFO = 'info';
+    private ?int $created_request_id = null;
 
     /**
      * @var xdglRequest
@@ -129,17 +130,17 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
      * @param ilObject $newObj
      * @param bool     $only_parent_func
      */
-    protected function afterSave(ilObject $new_object): void
-    {
-        global $DIC;
-        $args = func_get_args();
-        $xdglRequestUsage = new xdglRequestUsage();
-        $xdglRequestUsage->setCrsRefId($DIC->repositoryTree()->getParentId($new_object->getRefId()));
-        $xdglRequestUsage->setRequestId($args[1][0]);
-        $xdglRequestUsage->setObjId($new_object->getId());
-        $xdglRequestUsage->create();
-        parent::afterSave($new_object);
-    }
+    //    protected function afterSave(ilObject $new_object): void
+    //    {
+    //        global $DIC;
+    //        $args = func_get_args();
+    //        $xdglRequestUsage = new xdglRequestUsage();
+    //        $xdglRequestUsage->setCrsRefId($DIC->repositoryTree()->getParentId($new_object->getRefId()));
+    //        $xdglRequestUsage->setRequestId($args[1][0]);
+    //        $xdglRequestUsage->setObjId($new_object->getId());
+    //        $xdglRequestUsage->create();
+    //        parent::afterSave($new_object);
+    //    }
 
     /**
      * @return string
@@ -223,7 +224,7 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
                 switch ($cmd) {
                     case self::CMD_CREATE:
                         if ($this->isMaxDigiLitAmountReached()) {
-//                            $this->showMaxDigiLitAmountToast();
+                            //                            $this->showMaxDigiLitAmountToast();
                             $this->showMaxDigiLitAmountModal();
                             break;
                         }
@@ -352,7 +353,7 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
         $xdglRequest = new xdglRequest();
         $creation_form = new xdglRequestFormGUI($this, $xdglRequest);
         $creation_form->fillForm(ilObjDigiLit::returnParentCrsRefId($_GET['ref_id']));
-        // $creation_form->fillFormRandomized(); // only for development
+        $creation_form->fillFormRandomized(); // only for development
         return $creation_form->getAsPropertyFormGui();
     }
 
@@ -361,11 +362,24 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
         $creation_form = new xdglRequestFormGUI($this, new xdglRequest());
         $creation_form->setValuesByPost();
         if ($request_id = $creation_form->saveObject(ilObjDigiLit::returnParentCrsRefId($_GET['ref_id']))) {
-            $this->saveObject($request_id);
+            $this->created_request_id = (int) $request_id;
+            $this->saveObject();
         } else {
             $creation_form->setValuesByPost();
             $this->tpl->setContent($creation_form->getHtml());
         }
+    }
+
+    protected function afterSave(ilObject $new_object): void
+    {
+        global $DIC;
+        $xdglRequestUsage = new xdglRequestUsage();
+        $xdglRequestUsage->setCrsRefId($DIC->repositoryTree()->getParentId($this->node_id));
+        $xdglRequestUsage->setRequestId($this->created_request_id);
+        $xdglRequestUsage->setObjId($this->object_id);
+        $xdglRequestUsage->create();
+
+        parent::afterSave($new_object);
     }
 
     /**

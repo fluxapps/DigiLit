@@ -10,6 +10,7 @@
  */
 class xdglRequest extends ActiveRecord
 {
+    public const DATE_FORMAT = "Y-m-d H:i:s";
     /**
      * @var mixed
      */
@@ -427,7 +428,7 @@ class xdglRequest extends ActiveRecord
     {
         $xdgl = ilDigiLitPlugin::PLUGIN_ID;
 
-        return ilUtil::getDataDir() . DIRECTORY_SEPARATOR . $xdgl . DIRECTORY_SEPARATOR . self::createPathFromId($this->getId());
+        return ilFileUtils::getDataDir() . DIRECTORY_SEPARATOR . $xdgl . DIRECTORY_SEPARATOR . self::createPathFromId($this->getId());
     }
 
     /**
@@ -458,7 +459,8 @@ class xdglRequest extends ActiveRecord
         if ($fileExists && $status == self::STATUS_RELEASED) {
             header('Content-Type: application/pdf');
 
-            return ilUtil::deliverFile($this->getAbsoluteFilePath(), $this->getTitle() . '.pdf');
+            ilFileDelivery::deliverFileAttached($this->getAbsoluteFilePath(), $this->getTitle() . '.pdf');
+            return true;
         }
 
         return false;
@@ -471,7 +473,7 @@ class xdglRequest extends ActiveRecord
     public function createDir(): bool
     {
         if (!$this->dirExists()) {
-            if (!ilUtil::makeDirParents($this->getFilePath())) {
+            if (!ilFileUtils::makeDirParents($this->getFilePath())) {
                 throw new Exception('Unable to create Folder \'' . $this->getFilePath() . '\'. Missing permissions?');
             } else {
                 return true;
@@ -490,7 +492,7 @@ class xdglRequest extends ActiveRecord
     {
         $this->createDir();
 
-        if (ilUtil::moveUploadedFile(
+        if (ilFileUtils::moveUploadedFile(
             $xdglUploadFormGUI->getUploadTempName(),
             $xdglUploadFormGUI->getUploadTempName(),
             $this->getAbsoluteFilePath()
@@ -552,7 +554,7 @@ class xdglRequest extends ActiveRecord
             case 'date_last_status_change':
             case 'create_date':
             case 'last_change':
-                return date(DATE_ATOM, $this->{$field_name});
+                return date(self::DATE_FORMAT, $this->{$field_name});
                 break;
         }
     }
