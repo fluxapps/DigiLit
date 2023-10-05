@@ -182,7 +182,7 @@ class xdglRequestGUI
         $xdglRequestFormGUI = new xdglRequestFormGUI($this, $this->xdglRequest, false, false, false);
         $xdglRequestFormGUI->setValuesByPost();
         if ($xdglRequestFormGUI->saveObject(null)) {
-            ilUtil::sendSuccess($this->pl->txt('msg_success_edit'), true);
+            $this->tpl->setOnScreenMessage('success', $this->pl->txt('msg_success_edit'), true);
             $this->ctrl->setParameter($this, self::XDGL_ID, null);
             $this->ctrl->redirect($this, self::CMD_INDEX);
         } else {
@@ -196,7 +196,7 @@ class xdglRequestGUI
         $xdglRequestFormGUI = new xdglRequestFormGUI($this, $this->xdglRequest);
         $xdglRequestFormGUI->setValuesByPost();
         if ($xdglRequestFormGUI->saveObject(null)) {
-            ilUtil::sendSuccess($this->pl->txt('msg_success_add'), true);
+            $this->tpl->setOnScreenMessage('success', $this->pl->txt('msg_success_add'), true);
             $this->ctrl->setParameter($this, self::XDGL_ID, null);
             $this->ctrl->redirect($this, self::CMD_INDEX);
         } else {
@@ -287,9 +287,9 @@ class xdglRequestGUI
             $this->xdglRequest->deleteFile();
             global $ilUser;
             $this->xdglRequest->setLibrarianId($ilUser->getId());
-            ilUtil::sendSuccess($this->pl->txt('msg_request_file_deleted'), true);
+            $this->tpl->setOnScreenMessage('success', $this->pl->txt('msg_request_file_deleted'), true);
         } catch (Exception $e) {
-            ilUtil::sendFailure($e->getMessage(), true);
+            $this->tpl->setOnScreenMessage('failure', $e->getMessage(), true);
         }
         $this->ctrl->redirect($this, self::CMD_INDEX);
     }
@@ -324,9 +324,9 @@ class xdglRequestGUI
             $this->ilObjDigiLitFacadeFactory->requestUsageFactory()->deleteUsagesAndDigiLitObjectsByRequestId($this->xdglRequest->getId());
             $this->xdglRequest->setStatus(xdglRequest::STATUS_DELETED);
             $this->xdglRequest->update();
-            ilUtil::sendSuccess($this->pl->txt('msg_request_deleted'), true);
+            $this->tpl->setOnScreenMessage('success', $this->pl->txt('msg_request_deleted'), true);
         } catch (Exception $e) {
-            ilUtil::sendFailure($e->getMessage(), true);
+            $this->tpl->setOnScreenMessage('failure', $e->getMessage(), true);
         }
         $this->ctrl->redirect($this, self::CMD_INDEX);
     }

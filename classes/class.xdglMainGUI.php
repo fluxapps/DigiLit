@@ -88,13 +88,13 @@ class xdglMainGUI
             && xdglConfig::getConfigValue(xdglConfig::F_USE_LIBRARIES)
             && xdglConfig::getConfigValue(xdglConfig::F_OWN_LIBRARY_ONLY)
             && !xdglLibrary::isAssignedToAnyLibrary($this->user)) {
-            ilUtil::sendInfo($this->pl->txt('no_library_assigned'), true);
+            $this->tpl->setOnScreenMessage('info', $this->pl->txt('no_library_assigned'), true);
             ilUtil::redirect('/');
         }
 
         $next_class = $this->ctrl->getNextClass();
         if (!xdglConfig::isConfigUpToDate()) {
-            ilUtil::sendInfo($this->pl->txt("conf_out_of_date"));
+            $this->tpl->setOnScreenMessage('info', $this->pl->txt("conf_out_of_date"));
             $next_class = strtolower(xdglConfigGUI::class);
         }
 

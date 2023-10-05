@@ -74,8 +74,10 @@ class ilObjDigiLitAccess extends ilObjectPluginAccess
 
     protected static function redirectNonAccess()
     {
+        global $DIC;
         global $ilCtrl;
-        ilUtil::sendFailure(ilDigiLitPlugin::getInstance()->txt(self::TXT_PERMISSION_DENIED), true);
+        $main_tpl = $DIC->ui()->mainTemplate();
+        $main_tpl->setOnScreenMessage('failure', ilDigiLitPlugin::getInstance()->txt(self::TXT_PERMISSION_DENIED), true);
         $ilCtrl->redirectByClass(ilRepositoryGUI::class);
     }
 

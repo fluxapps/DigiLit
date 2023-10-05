@@ -393,10 +393,10 @@ class ilObjDigiLitGUI extends ilObjectPluginGUI
                 $this->xdglRequest = xdglRequest::find($_GET['xdgl_id']);
             }
             if (!$this->xdglRequest->deliverFile()) {
-                ilUtil::sendFailure($lng->txt('file_not_found'));
+                $this->tpl->setOnScreenMessage('failure', $lng->txt('file_not_found'));
             }
         } else {
-            ilUtil::sendFailure($this->lng->txt('no_permission'), true);
+            $this->tpl->setOnScreenMessage('failure', $this->lng->txt('no_permission'), true);
             ilObjectGUI::_gotoRepositoryRoot();
         }
     }

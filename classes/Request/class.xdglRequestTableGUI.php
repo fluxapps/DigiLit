@@ -332,7 +332,7 @@ class xdglRequestTableGUI extends ilTable2GUI
         $this->filterResults($usr_id, $xdglRequestList);
         $this->setMaxCount($xdglRequestList->count());
         if (!$xdglRequestList->hasSets()) {
-            ilUtil::sendInfo($this->pl->txt('no_results_for_filter'));
+            $this->main_tpl->setOnScreenMessage('info', $this->pl->txt('no_results_for_filter'));
         }
         $xdglRequestList->limit($this->getOffset(), $this->getOffset() + $this->getLimit());
         $xdglRequestList->dateFormat('d.m.Y - H:i:s');

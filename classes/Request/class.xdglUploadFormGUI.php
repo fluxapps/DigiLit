@@ -92,7 +92,7 @@ class xdglUploadFormGUI extends ilPropertyFormGUI
             global $ilUser;
             $this->request->setLibrarianId($ilUser->getId());
             $this->request->update();
-            ilUtil::sendSuccess($this->pl->txt('msg_success_upload'), true);
+            $this->global_tpl->setOnScreenMessage('success', $this->pl->txt('msg_success_upload'), true);
             xdglNotification::sendUploaded($this->request);
 
             return true;

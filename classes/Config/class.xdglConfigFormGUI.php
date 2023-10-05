@@ -231,7 +231,7 @@ class xdglConfigFormGUI extends ilPropertyFormGUI
         }
         if (!$check) {
             global $lng;
-            ilUtil::sendFailure($lng->txt("form_input_not_valid"));
+            $this->global_tpl->setOnScreenMessage('failure', $lng->txt("form_input_not_valid"));
 
             return false;
         }

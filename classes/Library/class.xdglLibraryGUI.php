@@ -37,10 +37,13 @@ class xdglLibraryGUI
      * @var ilTabsGUI
      */
     protected $tabs_gui;
+    private \ilGlobalTemplateInterface $main_tpl;
 
     public function __construct()
     {
+        global $DIC;
         global $tpl, $ilCtrl, $ilTabs;
+        $this->main_tpl = $DIC->ui()->mainTemplate();
         $this->tpl = $tpl;
         $this->tabs_gui = $ilTabs;
         $this->ctrl = $ilCtrl;
@@ -113,7 +116,7 @@ class xdglLibraryGUI
         $xdglLibraryFormGUI = new xdglLibraryFormGUI($this, $this->library);
         $xdglLibraryFormGUI->setValuesByPost();
         if ($xdglLibraryFormGUI->saveObject()) {
-            ilUtil::sendSuccess($this->pl->txt('msg_success_edit'), true);
+            $this->main_tpl->setOnScreenMessage('success', $this->pl->txt('msg_success_edit'), true);
             $this->ctrl->redirect($this, self::CMD_CANCEL);
         }
         $this->tpl->setContent($xdglLibraryFormGUI->getHTML());
@@ -138,7 +141,7 @@ class xdglLibraryGUI
         $xdglLibraryFormGUI = new xdglLibraryFormGUI($this, new xdglLibrary());
         $xdglLibraryFormGUI->setValuesByPost();
         if ($xdglLibraryFormGUI->saveObject()) {
-            ilUtil::sendSuccess($this->pl->txt('msg_success_add'), true);
+            $this->main_tpl->setOnScreenMessage('success', $this->pl->txt('msg_success_add'), true);
             $this->ctrl->redirect($this, self::CMD_CANCEL);
         }
         $this->tpl->setContent($xdglLibraryFormGUI->getHTML());

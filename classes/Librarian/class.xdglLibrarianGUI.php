@@ -30,10 +30,13 @@ class xdglLibrarianGUI
      * @var ilTabsGUI
      */
     protected $tabs_gui;
+    private \ilGlobalTemplateInterface $main_tpl;
 
     public function __construct()
     {
+        global $DIC;
         global $tpl, $ilCtrl, $ilTabs;
+        $this->main_tpl = $DIC->ui()->mainTemplate();
         $this->tpl = $tpl;
         $this->tabs_gui = $ilTabs;
         $this->ctrl = $ilCtrl;
@@ -104,7 +107,7 @@ class xdglLibrarianGUI
             }
         }
 
-        ilUtil::sendSuccess($this->pl->txt('msg_success_add'), true);
+        $this->main_tpl->setOnScreenMessage('success', $this->pl->txt('msg_success_add'), true);
         $this->ctrl->redirect($this, self::CMD_ASSIGN);
     }
 
