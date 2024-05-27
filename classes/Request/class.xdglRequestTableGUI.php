@@ -13,12 +13,14 @@
 class xdglRequestTableGUI extends ilTable2GUI
 {
     public const TBL_XDGL_REQUEST_OVERVIEWS = 'tbl_xdgl_request_overviews_v3';
+    private bool $has_valid_regex;
+    private ?string $regex = null;
     protected \ilDigiLitPlugin $pl;
     /**
      * @var array
      */
     protected $filter = [];
-
+    
     /**
      * @param xdglRequestGUI $a_parent_obj
      * @param string         $a_parent_cmd
@@ -29,6 +31,12 @@ class xdglRequestTableGUI extends ilTable2GUI
          * @var ilCtrl $ilCtrl
          */
         global $ilCtrl;
+        
+        $this->has_valid_regex = xdglConfig::hasValidRegex();
+        if ($this->has_valid_regex) {
+            $this->regex = xdglConfig::getConfigValue(xdglConfig::F_REGEX);
+        }
+        
         $this->ctrl = $ilCtrl;
         $this->pl = ilDigiLitPlugin::getInstance();
         $this->setId(self::TBL_XDGL_REQUEST_OVERVIEWS);
@@ -50,11 +58,11 @@ class xdglRequestTableGUI extends ilTable2GUI
         $this->setExternalSorting(true);
         $this->setExternalSegmentation(true);
     }
-
+    
     /**
      * @param array $a_set
      */
-    protected function fillRow(array $a_set): void
+    protected function fillRow(array $a_set) : void
     {
         $this->tpl->setVariable('VAL_EXT_ID', $a_set['ext_id']);
         $this->tpl->setVariable('VAL_TITLE', $a_set['title']);
@@ -67,10 +75,10 @@ class xdglRequestTableGUI extends ilTable2GUI
         $this->tpl->setVariable('VAL_LIBRARY', $a_set['xdgl_library_title']);
         $this->tpl->setVariable('VAL_LIBRARIAN', $a_set['usr_data_2_email']);
         $this->tpl->setVariable('VAL_NUMBER_OF_USAGES', $a_set['number_of_usages']);
-
+        
         $this->addActionMenu($a_set);
     }
-
+    
     protected function initColums()/*: void*/
     {
         //		$this->addColumn($this->pl->txt('request_ext_id'), NULL);
@@ -89,7 +97,7 @@ class xdglRequestTableGUI extends ilTable2GUI
         //		}
         $this->addColumn($this->pl->txt('common_actions'));
     }
-
+    
     /**
      * @param array $a_set
      */
@@ -97,14 +105,14 @@ class xdglRequestTableGUI extends ilTable2GUI
     {
         $current_selection_list = new ilAdvancedSelectionListGUI();
         $current_selection_list->setListTitle($this->pl->txt('common_actions'));
-
+        
         $current_selection_list->setId('request_overview_actions_' . $a_set['id']);
         $current_selection_list->setUseImages(false);
-
+        
         // edit the request
         $this->ctrl->setParameter($this->parent_obj, xdglRequestGUI::XDGL_ID, $a_set['id']);
         $this->ctrl->setParameterByClass(xdglLibraryGUI::class, xdglRequestGUI::XDGL_ID, $a_set['id']);
-
+        
         switch ($a_set['status']) {
             case xdglRequest::STATUS_NEW:
             case xdglRequest::STATUS_IN_PROGRRESS:
@@ -185,17 +193,23 @@ class xdglRequestTableGUI extends ilTable2GUI
             case xdglRequest::STATUS_REFUSED:
                 break;
         }
-
+        
         $this->tpl->setVariable('VAL_ACTION', $current_selection_list->getHTML());
     }
-
+    
     protected function initFilters()
     {
         // Status
         $te = new ilMultiSelectInputGUI($this->pl->txt('filter_status'), 'status');
-        $te->setOptions([xdglRequest::STATUS_NEW => $this->pl->txt('request_status_' . xdglRequest::STATUS_NEW), xdglRequest::STATUS_IN_PROGRRESS => $this->pl->txt('request_status_' . xdglRequest::STATUS_IN_PROGRRESS), xdglRequest::STATUS_REFUSED => $this->pl->txt('request_status_' . xdglRequest::STATUS_REFUSED), xdglRequest::STATUS_RELEASED => $this->pl->txt('request_status_' . xdglRequest::STATUS_RELEASED)]);
+        $te->setOptions(
+            [xdglRequest::STATUS_NEW => $this->pl->txt('request_status_' . xdglRequest::STATUS_NEW),
+             xdglRequest::STATUS_IN_PROGRRESS => $this->pl->txt('request_status_' . xdglRequest::STATUS_IN_PROGRRESS),
+             xdglRequest::STATUS_REFUSED => $this->pl->txt('request_status_' . xdglRequest::STATUS_REFUSED),
+             xdglRequest::STATUS_RELEASED => $this->pl->txt('request_status_' . xdglRequest::STATUS_RELEASED)
+            ]
+        );
         $this->addAndReadFilterItem($te);
-
+        
         // Library
         if (ilObjDigiLitAccess::showAllLibraries()) {
             $te = new ilMultiSelectInputGUI($this->pl->txt('filter_library'), 'xdgl_library_id');
@@ -216,19 +230,19 @@ class xdglRequestTableGUI extends ilTable2GUI
         ksort($libs);
         $te->setOptions($libs);
         $this->addAndReadFilterItem($te);
-
+        
         // Ext_ID
         $te = new ilTextInputGUI($this->pl->txt('request_ext_id'), 'ext_id');
         $this->addAndReadFilterItem($te);
-
+        
         // number of usages
         $select = new ilSelectInputGUI($this->pl->txt('number_of_usages'), 'number_of_usages');
         $select->setOptions(['0-5' => '0-5', '5-10' => '5-10', '10-15' => '10-15', '15-20' => '15-20']);
         $this->addAndReadFilterItem($select);
     }
-
+    
     /**
-     * @param int              $usr_id
+     * @param int $usr_id
      * @param ActiveRecordList $xdglRequestList
      *
      * @throws Exception
@@ -259,19 +273,19 @@ class xdglRequestTableGUI extends ilTable2GUI
                     case 'number_of_usages':
                         $start_between = substr($value, 0, strpos($value, '-'));
                         $end_between = str_replace($start_between . '-', '', $value);
-
+                        
                         $h = new arHaving();
                         $h->setFieldname('number_of_usages');
                         $h->setOperator('>');
                         $h->setValue($start_between);
                         $xdglRequestList->getArHavingCollection()->add($h);
-
+                        
                         $h = new arHaving();
                         $h->setFieldname('number_of_usages');
                         $h->setOperator('<');
                         $h->setValue($end_between);
                         $xdglRequestList->getArHavingCollection()->add($h);
-
+                        
                         break;
                     default:
                         $xdglRequestList->where([$field => $value]);
@@ -280,8 +294,8 @@ class xdglRequestTableGUI extends ilTable2GUI
             }
         }
     }
-
-    public function parseData(): void
+    
+    public function parseData() : void
     {
         global $ilUser;
         $usr_id = $ilUser->getId();
@@ -299,36 +313,46 @@ class xdglRequestTableGUI extends ilTable2GUI
         $xdglRequestList->leftjoin(xdglLibrarian::TABLE_NAME, 'librarian_id', 'usr_id', ['usr_id', 'library_id']);
         $xdglRequestList->leftjoin('usr_data', 'librarian_id', 'usr_id', ['email']);
         $xdglRequestList->leftjoin(xdglRequestUsage::TABLE_NAME, 'id', 'request_id', ['crs_ref_id'], '=');
-        $xdglRequestList->leftjoin('object_reference', xdglRequestUsage::TABLE_NAME . '.crs_ref_id', 'ref_id', ['ref_id', 'obj_id'], '=', true);
+        $xdglRequestList->leftjoin(
+            'object_reference',
+            xdglRequestUsage::TABLE_NAME . '.crs_ref_id',
+            'ref_id',
+            ['ref_id', 'obj_id'],
+            '=',
+            true
+        );
         $xdglRequestList->leftjoin('object_data', 'object_reference.obj_id', 'obj_id', ['title'], '=', true);
-
+        
         // Ext_ID
         $sel = new arSelect();
         $sel->setAs('ext_id');
-        if (xdglConfig::hasValidRegex()) {
-            $regex = xdglConfig::getConfigValue(xdglConfig::F_REGEX);
+        
+        if ($this->has_valid_regex) {
+            $regex = $this->regex;
             preg_match('/\/\((.*)\)\//', $regex, $matches);
-            $sel->setFieldName('CASE object_data.title REGEXP "' . $matches[1] . '"
+            $sel->setFieldName(
+                'CASE object_data.title REGEXP "' . $matches[1] . '"
 				WHEN "1" THEN CONCAT(SUBSTRING_INDEX(object_data.title, " ", 1), "-", LPAD(' . xdglRequest::TABLE_NAME . '.id, 6, 0))
-				WHEN "0" THEN CONCAT("UNKNOWN-", LPAD(' . xdglRequest::TABLE_NAME . '.id, 6, 0)) END');
+				WHEN "0" THEN CONCAT("UNKNOWN-", LPAD(' . xdglRequest::TABLE_NAME . '.id, 6, 0)) END'
+            );
             $sel->setTableName('');
         } else {
             $sel->setFieldName('id');
             $sel->setTableName(xdglRequest::TABLE_NAME);
         }
         $xdglRequestList->getArSelectCollection()->add($sel);
-
+        
         // number_of_usages
         $sel = new arSelect();
         $sel->setAs('number_of_usages');
         $sel->setFieldName('COUNT(' . xdglRequestUsage::TABLE_NAME . '.id)');
         $xdglRequestList->getArSelectCollection()->add($sel);
-
+        
         if (!ilObjDigiLitAccess::showAllLibraries()) {
             $lib_ids = xdglLibrary::getLibraryIdsForUser($ilUser);
             $xdglRequestList->where([xdglLibrary::TABLE_NAME . '.id' => $lib_ids]);
         }
-
+        
         $this->filterResults($usr_id, $xdglRequestList);
         $this->setMaxCount($xdglRequestList->count());
         if (!$xdglRequestList->hasSets()) {
@@ -336,15 +360,17 @@ class xdglRequestTableGUI extends ilTable2GUI
         }
         $xdglRequestList->limit($this->getOffset(), $this->getOffset() + $this->getLimit());
         $xdglRequestList->dateFormat('d.m.Y - H:i:s');
-
-        $xdglRequestList->where("1=1 GROUP BY " . xdglRequest::TABLE_NAME
-            . ".id"); // ActiveRecors currently does not support GROUP BY, therefore we add a whereStatement with the GROUP BY but must prepend a 1=1 because of the automatic concatinating of the query with a AND.
-
+        
+        $xdglRequestList->where(
+            "1=1 GROUP BY " . xdglRequest::TABLE_NAME
+            . ".id"
+        ); // ActiveRecors currently does not support GROUP BY, therefore we add a whereStatement with the GROUP BY but must prepend a 1=1 because of the automatic concatinating of the query with a AND.
+        
         $a_data = $xdglRequestList->getArray();
-
+        
         $this->setData($a_data);
     }
-
+    
     /**
      * @param ilFormPropertyGUI $item
      */
@@ -363,8 +389,8 @@ class xdglRequestTableGUI extends ilTable2GUI
             $this->filter[$item->getPostVar()] = $item->getValue();
         }
     }
-
-
+    
+    
     //	public function resetOffset() {
     //		parent::resetOffset(false);
     //		$this->ctrl->setParameter($this->parent_obj, $this->getNavParameter(), $this->nav_value);

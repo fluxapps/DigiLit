@@ -38,44 +38,45 @@ class xdglConfig extends ActiveRecord
      * @var bool
      */
     protected bool $ar_safe_read = false;
-
+    
     /**
      * @return string
      */
-    public function getConnectorContainerName(): string
+    public function getConnectorContainerName() : string
     {
         return self::TABLE_NAME;
     }
-
+    
     /**
      * @return string
      * @deprecated
      */
-    public static function returnDbTableName(): string
+    public static function returnDbTableName() : string
     {
         return self::TABLE_NAME;
     }
-
+    
     /**
      * @return bool
      */
-    public static function isConfigUpToDate(): bool
+    public static function isConfigUpToDate() : bool
     {
         return self::getConfigValue(self::F_CONFIG_VERSION) == self::CONFIG_VERSION;
     }
-
-    /**
-     * @return bool
-     */
-    public static function hasValidRegex()
+    
+    public static function hasValidRegex() : bool
     {
-        if (!self::getConfigValue(self::F_USE_REGEX)) {
-            return false;
+        static $return;
+        if (isset($return)) {
+            return $return;
         }
-
-        return self::isRegexValid(self::getConfigValue(self::F_REGEX));
+        if (!self::getConfigValue(self::F_USE_REGEX)) {
+            return $return = false;
+        }
+        
+        return $return = self::isRegexValid(self::getConfigValue(self::F_REGEX));
     }
-
+    
     /**
      * @param string $name
      *
@@ -92,26 +93,26 @@ class xdglConfig extends ActiveRecord
                 self::$cache[$name] = null;
             }
         }
-
+        
         return self::$cache[$name];
     }
-
+    
     /**
      * @param string $name
      * @param mixed  $value
      */
-    public static function setConfigValue($name, $value): void
+    public static function setConfigValue($name, $value) : void
     {
         $obj = new self($name);
         $obj->setValue(json_encode($value, JSON_THROW_ON_ERROR));
-
+        
         if (self::where(['name' => $name])->hasSets()) {
             $obj->update();
         } else {
             $obj->create();
         }
     }
-
+    
     /**
      * @var string
      *
@@ -131,25 +132,25 @@ class xdglConfig extends ActiveRecord
      * @db_length           4000
      */
     protected $value;
-
+    
     /**
      * @param string $regex
      *
      * @return bool
      */
-    public static function isRegexValid($regex): bool
+    public static function isRegexValid($regex) : bool
     {
         return (bool) preg_match("/^\/.+\/[a-z]*$/i", $regex);
     }
-
+    
     /**
      * @param string $name
      */
-    public function setName($name): void
+    public function setName($name) : void
     {
         $this->name = $name;
     }
-
+    
     /**
      * @return string
      */
@@ -157,15 +158,15 @@ class xdglConfig extends ActiveRecord
     {
         return $this->name;
     }
-
+    
     /**
      * @param string $value
      */
-    public function setValue($value): void
+    public function setValue($value) : void
     {
         $this->value = $value;
     }
-
+    
     /**
      * @return string
      */
