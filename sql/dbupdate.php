@@ -103,3 +103,14 @@ if ($ilDB->tableColumnExists(xdglRequest::TABLE_NAME, 'crs_ref_id')) {
 	$ilDB->dropTableColumn(xdglRequest::TABLE_NAME, 'crs_ref_id');
 }
 ?>
+<#12>
+<?php
+global $ilDB;
+/** @var ilDBInterface $ilDB */
+// create several indices for better perfomance
+
+$ilDB->addIndex('xdgl_librarian', ['usr_id'], 'i1');
+$ilDB->addIndex('xdgl_librarian', ['library_id'], 'i2');
+$ilDB->addIndex('xdgl_request_usage', ['crs_ref_id'], 'i1');
+$ilDB->addIndex('xdgl_request_usage', ['request_id'], 'i2');
+?>
