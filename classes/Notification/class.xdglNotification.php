@@ -10,6 +10,8 @@
  */
 class xdglNotification extends ilMailNotification
 {
+    
+    protected ?string $internal_notification_type = null;
     public const TYPE_NEW_REQUEST = xdglConfig::F_MAIL_NEW_REQUEST;
     public const TYPE_REJECTED = xdglConfig::F_MAIL_REJECTED;
     public const TYPE_ULOADED = xdglConfig::F_MAIL_UPLOADED;
@@ -39,28 +41,87 @@ class xdglNotification extends ilMailNotification
     /**
      * @var array
      */
-    protected static $placeholders = [self::TYPE_NEW_REQUEST => [xdglNotification::R_TITLE, xdglNotification::R_AUTHOR, xdglNotification::R_REQUESTER_FULLNAME, xdglNotification::R_COURSE_NUMBER, xdglNotification::R_BOOK, xdglNotification::R_EDITOR, xdglNotification::R_LOCATION, xdglNotification::R_PUBLISHER, xdglNotification::R_PUBLISHING_YEAR, xdglNotification::R_PAGES, xdglNotification::R_VOLUME, xdglNotification::R_EDITION_RELEVANT, xdglNotification::R_ISSN, xdglNotification::R_LAST_MODIFIED_BY_USER, xdglNotification::R_ASSIGNED_LIBRARY, xdglNotification::R_ASSIGNED_LIBRARIAN, xdglNotification::R_NOTICE, xdglNotification::R_ALL], self::TYPE_ULOADED => [xdglNotification::R_TITLE, xdglNotification::R_AUTHOR, xdglNotification::R_COURSE_NUMBER, xdglNotification::R_BOOK, xdglNotification::R_EDITOR, xdglNotification::R_LOCATION, xdglNotification::R_PUBLISHER, xdglNotification::R_PUBLISHING_YEAR, xdglNotification::R_PAGES, xdglNotification::R_VOLUME, xdglNotification::R_EDITION_RELEVANT, xdglNotification::R_ISSN, xdglNotification::R_ASSIGNED_LIBRARY, xdglNotification::R_ASSIGNED_LIBRARIAN, xdglNotification::R_NOTICE, xdglNotification::R_ALL], self::TYPE_REJECTED => [xdglNotification::R_TITLE, xdglNotification::R_AUTHOR, xdglNotification::R_REASON, xdglNotification::R_COURSE_NUMBER, xdglNotification::R_BOOK, xdglNotification::R_EDITOR, xdglNotification::R_LOCATION, xdglNotification::R_PUBLISHER, xdglNotification::R_PUBLISHING_YEAR, xdglNotification::R_PAGES, xdglNotification::R_VOLUME, xdglNotification::R_EDITION_RELEVANT, xdglNotification::R_ISSN, xdglNotification::R_ASSIGNED_LIBRARY, xdglNotification::R_ASSIGNED_LIBRARIAN, xdglNotification::R_NOTICE, xdglNotification::R_ALL], self::TYPE_MOVED => [
-        xdglNotification::R_TITLE,
-        xdglNotification::R_AUTHOR,
-        xdglNotification::R_REQUESTER_FULLNAME,
-        xdglNotification::R_COURSE_NUMBER,
-        xdglNotification::R_BOOK,
-        xdglNotification::R_EDITOR,
-        xdglNotification::R_LOCATION,
-        xdglNotification::R_PUBLISHER,
-        xdglNotification::R_PUBLISHING_YEAR,
-        xdglNotification::R_PAGES,
-        xdglNotification::R_VOLUME,
-        xdglNotification::R_EDITION_RELEVANT,
-        xdglNotification::R_ISSN,
-        xdglNotification::R_LAST_MODIFIED_BY_USER,
-        xdglNotification::R_ASSIGNED_LIBRARY,
-        xdglNotification::R_ASSIGNED_LIBRARIAN,
-        //			xdglNotification::R_INTERNAL_NOTICE,
-        xdglNotification::R_NOTICE,
-        xdglNotification::R_ALL,
-    ]];
-
+    protected static $placeholders = [
+        self::TYPE_NEW_REQUEST => [
+            xdglNotification::R_TITLE,
+            xdglNotification::R_AUTHOR,
+            xdglNotification::R_REQUESTER_FULLNAME,
+            xdglNotification::R_COURSE_NUMBER,
+            xdglNotification::R_BOOK,
+            xdglNotification::R_EDITOR,
+            xdglNotification::R_LOCATION,
+            xdglNotification::R_PUBLISHER,
+            xdglNotification::R_PUBLISHING_YEAR,
+            xdglNotification::R_PAGES,
+            xdglNotification::R_VOLUME,
+            xdglNotification::R_EDITION_RELEVANT,
+            xdglNotification::R_ISSN,
+            xdglNotification::R_LAST_MODIFIED_BY_USER,
+            xdglNotification::R_ASSIGNED_LIBRARY,
+            xdglNotification::R_ASSIGNED_LIBRARIAN,
+            xdglNotification::R_NOTICE,
+            xdglNotification::R_ALL
+        ],
+        self::TYPE_ULOADED => [
+            xdglNotification::R_TITLE,
+            xdglNotification::R_AUTHOR,
+            xdglNotification::R_COURSE_NUMBER,
+            xdglNotification::R_BOOK,
+            xdglNotification::R_EDITOR,
+            xdglNotification::R_LOCATION,
+            xdglNotification::R_PUBLISHER,
+            xdglNotification::R_PUBLISHING_YEAR,
+            xdglNotification::R_PAGES,
+            xdglNotification::R_VOLUME,
+            xdglNotification::R_EDITION_RELEVANT,
+            xdglNotification::R_ISSN,
+            xdglNotification::R_ASSIGNED_LIBRARY,
+            xdglNotification::R_ASSIGNED_LIBRARIAN,
+            xdglNotification::R_NOTICE,
+            xdglNotification::R_ALL
+        ],
+        self::TYPE_REJECTED => [
+            xdglNotification::R_TITLE,
+            xdglNotification::R_AUTHOR,
+            xdglNotification::R_REASON,
+            xdglNotification::R_COURSE_NUMBER,
+            xdglNotification::R_BOOK,
+            xdglNotification::R_EDITOR,
+            xdglNotification::R_LOCATION,
+            xdglNotification::R_PUBLISHER,
+            xdglNotification::R_PUBLISHING_YEAR,
+            xdglNotification::R_PAGES,
+            xdglNotification::R_VOLUME,
+            xdglNotification::R_EDITION_RELEVANT,
+            xdglNotification::R_ISSN,
+            xdglNotification::R_ASSIGNED_LIBRARY,
+            xdglNotification::R_ASSIGNED_LIBRARIAN,
+            xdglNotification::R_NOTICE,
+            xdglNotification::R_ALL
+        ],
+        self::TYPE_MOVED => [
+            xdglNotification::R_TITLE,
+            xdglNotification::R_AUTHOR,
+            xdglNotification::R_REQUESTER_FULLNAME,
+            xdglNotification::R_COURSE_NUMBER,
+            xdglNotification::R_BOOK,
+            xdglNotification::R_EDITOR,
+            xdglNotification::R_LOCATION,
+            xdglNotification::R_PUBLISHER,
+            xdglNotification::R_PUBLISHING_YEAR,
+            xdglNotification::R_PAGES,
+            xdglNotification::R_VOLUME,
+            xdglNotification::R_EDITION_RELEVANT,
+            xdglNotification::R_ISSN,
+            xdglNotification::R_LAST_MODIFIED_BY_USER,
+            xdglNotification::R_ASSIGNED_LIBRARY,
+            xdglNotification::R_ASSIGNED_LIBRARIAN,
+            //			xdglNotification::R_INTERNAL_NOTICE,
+            xdglNotification::R_NOTICE,
+            xdglNotification::R_ALL,
+        ]
+    ];
+    
     /**
      * @param int $type
      *
@@ -70,108 +131,83 @@ class xdglNotification extends ilMailNotification
     {
         return self::$placeholders[$type];
     }
-
-    /**
-     * @var xdglRequest
-     */
-    protected $xdglRequest;
-    /**
-     * @var ilObjUser
-     */
-    protected $ilObjUser;
-
-    /**
-     * @param xdglRequest $xdglRequest
-     *
-     * @return bool
-     */
-    public static function sendNew(xdglRequest $xdglRequest)
+    
+    protected ?xdglRequest $xdglRequest = null;
+    protected ?ilObjUser $ilObjUser = null;
+    
+    public static function sendNew(xdglRequest $xdglRequest) : bool
     {
         $obj = new self();
-        $obj->setType(self::TYPE_NEW_REQUEST);
+        $obj->setInternalNotificationType(self::TYPE_NEW_REQUEST);
         $obj->setXdglRequest($xdglRequest);
-
+        
         return $obj->send();
     }
-
-    /**
-     * @param xdglRequest $xdglRequest
-     *
-     * @return bool
-     */
-    public static function sendUploaded(xdglRequest $xdglRequest)
+    
+    public static function sendUploaded(xdglRequest $xdglRequest) : bool
     {
         $obj = new self();
-        $obj->setType(self::TYPE_ULOADED);
+        $obj->setInternalNotificationType(self::TYPE_ULOADED);
         $obj->setXdglRequest($xdglRequest);
-
+        
         return $obj->send();
     }
-
-    /**
-     * @param xdglRequest $xdglRequest
-     *
-     * @return bool
-     */
-    public static function sendRejected(xdglRequest $xdglRequest)
+    
+    public static function sendRejected(xdglRequest $xdglRequest) : bool
     {
         $obj = new self();
-        $obj->setType(self::TYPE_REJECTED);
+        $obj->setInternalNotificationType(self::TYPE_REJECTED);
         $obj->setXdglRequest($xdglRequest);
-
+        
         return $obj->send();
     }
-
-    /**
-     * @param xdglRequest $xdglRequest
-     *
-     * @return bool
-     */
-    public static function sendMoved(xdglRequest $xdglRequest)
+    
+    public static function sendMoved(xdglRequest $xdglRequest) : bool
     {
         $obj = new self();
-        $obj->setType(self::TYPE_MOVED);
+        $obj->setInternalNotificationType(self::TYPE_MOVED);
         $obj->setXdglRequest($xdglRequest);
-
+        
         return $obj->send();
     }
-
-    /**
-     * @param string $field
-     *
-     * @return string
-     */
-    protected function getReplace($field)
+    
+    public function setInternalNotificationType(string $type) : void
+    {
+        $this->internal_notification_type = $type;
+    }
+    
+    public function getInternalNotificationType() : ?string
+    {
+        return $this->internal_notification_type;
+    }
+    
+    protected function getReplace(string $field) : string
     {
         global $ilCtrl;
         /**
          * @var ilCtrl $ilCtrl
          */
         $this->initUser();
-
+        
         switch ($field) {
             case self::R_ALL:
                 $return = '';
-                foreach (self::$placeholders[$this->getType()] as $v) {
+                foreach (self::$placeholders[$this->getInternalNotificationType()] as $v) {
                     if ($v != self::R_ALL) {
                         $return .= $v . ': ' . self::getReplace($v) . "\n";
                     }
                 }
-
+                
                 return $return;
-
+            
             case self::ADMIN_LINK:
                 $ilCtrl->setParameterByClass(
                     xdglRequestGUI::class,
                     xdglRequestGUI::XDGL_ID,
                     $this->getXdglRequest()->getId()
                 );
-
-                //				return urldecode(ilUtil::_getHttpPath() . '/' . $ilCtrl->getLinkTargetByClass(array(
-                //						ilUIPluginRouterGUI::class,
-                //						xdglRequestGUI::class
-                //					), xdglRequestGUI::CMD_VIEW, '', false, false));
-                // no break
+            
+            // no break
             case self::R_TITLE:
                 return $this->getXdglRequest()->getTitle();
             case self::R_AUTHOR:
@@ -209,7 +245,7 @@ class xdglNotification extends ilMailNotification
             case self::R_LAST_MODIFIED_BY_USER:
                 $usr_id = $this->getXdglRequest()->getLastModifiedByUsrId();
                 $obj = new ilObjUser($usr_id);
-
+                
                 return $obj->getFullname();
                 break;
             case self::R_ASSIGNED_LIBRARY:
@@ -230,70 +266,56 @@ class xdglNotification extends ilMailNotification
                 /**
                  * @var xdglLibrarian $xdglLibrary
                  */
-
+                
                 $activeRecordList = xdglLibrarian::where(['usr_id' => $lib_id]);
                 if ($activeRecordList->hasSets()) {
                     $xdglLibrarian = $activeRecordList->first();
                     if ($xdglLibrarian instanceof xdglLibrarian) {
                         $usr_id = $xdglLibrarian->getUsrId();
                         $obj = new ilObjUser($usr_id);
-
+                        
                         return $obj->getFullname() . ' (' . $obj->getEmail() . ')';
                     }
                 }
-
+                
                 return "";
         }
-
+        
         return '';
     }
-
-    /**
-     * @return string
-     */
-    public function getAdress()
+    
+    public function getAdress() : ?string
     {
-        switch ($this->getType()) {
+        switch ($this->getInternalNotificationType()) {
             case self::TYPE_MOVED:
             case self::TYPE_NEW_REQUEST:
                 $lib_id = $this->getXdglRequest()->getLibraryId();
-                /**
-                 * @var xdglLibrary $xdglLibrary
-                 */
+                /** @var xdglLibrary $xdglLibrary */
                 $xdglLibrary = xdglLibrary::find($lib_id);
                 if ($xdglLibrary instanceof xdglLibrary) {
                     return $xdglLibrary->getEmail();
-                } else {
-                    return xdglConfig::getConfigValue(xdglConfig::F_MAIL);
                 }
-
-                break;
+                
+                return xdglConfig::getConfigValue(xdglConfig::F_MAIL);
             case self::TYPE_ULOADED:
             case self::TYPE_REJECTED:
                 return $this->ilObjUser->getEmail();
-                break;
         }
+        
+        return null;
     }
-
-    /**
-     * @return string
-     */
-    protected function generateBody(): string
+    
+    protected function generateBody() : string
     {
-        $placeholders = self::getPlaceHoldersForType($this->getType());
-        $body = xdglConfig::getConfigValue($this->getType());
+        $placeholders = self::getPlaceHoldersForType($this->getInternalNotificationType());
+        $body = xdglConfig::getConfigValue($this->getInternalNotificationType());
         foreach ($placeholders as $k) {
             $body = str_replace('[' . $k . ']', $this->getReplace($k), $body);
         }
         return $body;
     }
-
-    /**
-     * Send notifications
-     *
-     * @return bool
-     */
-    public function send()
+    
+    public function send() : bool
     {
         global $DIC;
         /**
@@ -304,37 +326,30 @@ class xdglNotification extends ilMailNotification
         );
         $this->initUser();
         $this->initLanguage($this->ilObjUser->getId());
-
+        
         $mail = new ilMimeMail();
         $mail->From($f->user($DIC->user()->getId()));
         $subject = $this->getXdglRequest()->getExtId() . ': ' . ilDigiLitPlugin::getInstance()->txt(
-            'notification_subject_' . $this->getType()
-        );
+                'notification_subject_' . $this->getInternalNotificationType()
+            );
         $mail->Subject($subject);
         $mail->Body($this->generateBody());
         $mail->To($this->getAdress());
-
+        
         return $mail->Send();
     }
-
-
-    /**
-     * @return xdglRequest
-     */
-    public function getXdglRequest()
+    
+    public function getXdglRequest() : xdglRequest
     {
         return $this->xdglRequest;
     }
-
-    /**
-     * @param xdglRequest $xdglRequest
-     */
-    public function setXdglRequest($xdglRequest): void
+    
+    public function setXdglRequest(xdglRequest $xdglRequest) : void
     {
         $this->xdglRequest = $xdglRequest;
     }
-
-    protected function initUser()
+    
+    protected function initUser() : void
     {
         if ($this->ilObjUser === null) {
             $this->ilObjUser = new ilObjUser($this->getXdglRequest()->getRequesterUsrId());
